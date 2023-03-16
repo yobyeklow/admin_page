@@ -39,8 +39,11 @@ export const data = {
   datasets: [
     {
       data: [100, 120, 220, 300, 250, 400, 500, 300, 600],
-      borderColor: "rgb(75, 192, 192)",
+      borderColor: "rgb(171,169,211)",
       fill: "false",
+      tension: 0.4,
+      backgroundColor: "rgb(238,238,255)",
+      fill: true,
     },
   ],
 };

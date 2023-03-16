@@ -13,11 +13,11 @@ const Header = () => {
         <div className="search-header">
           <input placeholder="Tìm kiếm theo tên,ID,..." type="text" />
           <div className="search-icon">
-            <span class="material-symbols-outlined">search</span>
+            <span className="material-symbols-outlined">search</span>
           </div>
         </div>
         <div className="bell">
-          <span class="material-symbols-outlined">notifications</span>
+          <span className="material-symbols-outlined">notifications</span>
         </div>
         <div className="avartar-header">
           <img src={avartar} alt="" />

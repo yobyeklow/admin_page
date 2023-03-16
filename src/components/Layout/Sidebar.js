@@ -18,7 +18,7 @@ const Sidebar = () => {
               isActive ? "dashboard-content active" : "dashboard-content"
             }
           >
-            <span class="text-2xl material-symbols-outlined">home</span>
+            <span className="text-2xl material-symbols-outlined">home</span>
             <h3 className="text-lg">Dashboard</h3>
           </NavLink>
 
@@ -28,7 +28,7 @@ const Sidebar = () => {
               isActive ? "customers-content active" : "customers-content"
             }
           >
-            <span class="text-2xl material-symbols-outlined">face</span>
+            <span className="text-2xl material-symbols-outlined">face</span>
             <h3 className="text-lg">Customers</h3>
           </NavLink>
           <NavLink
@@ -37,7 +37,9 @@ const Sidebar = () => {
               isActive ? "orders-content active" : "orders-content"
             }
           >
-            <span class="text-2xl material-symbols-outlined">demography</span>
+            <span className="text-2xl material-symbols-outlined">
+              demography
+            </span>
             <h3 className="text-lg">Orders</h3>
           </NavLink>
           <NavLink
@@ -46,7 +48,7 @@ const Sidebar = () => {
               isActive ? "products-content active" : "products-content"
             }
           >
-            <span class="text-2xl material-symbols-outlined">category</span>
+            <span className="text-2xl material-symbols-outlined">category</span>
             <h3 className="text-lg">Products</h3>
           </NavLink>
           <NavLink
@@ -55,7 +57,9 @@ const Sidebar = () => {
               isActive ? "analyst-content active" : "analyst-content"
             }
           >
-            <span class="text-2xl material-symbols-outlined">monitoring</span>
+            <span className="text-2xl material-symbols-outlined">
+              monitoring
+            </span>
             <h3 className="text-lg">Statistics</h3>
           </NavLink>
         </div>

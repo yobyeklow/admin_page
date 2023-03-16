@@ -1,7 +1,7 @@
 import React from "react";
-import iphone14 from "../../image/iphone14pro_tim.png";
-import MQD83 from "../../image/MQD83.jpg";
-import info_avt from "../../image/info.png";
+import iphone14 from "../../../image/iphone14pro_tim.png";
+import MQD83 from "../../../image/MQD83.jpg";
+import info_avt from "../../../image/info.png";
 const OrderDetailPage = () => {
   return (
     <div className="order-details">

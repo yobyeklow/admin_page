@@ -1,28 +1,19 @@
 import React, { Fragment } from "react";
-import Header from "./components/Layout/Header";
 import Dashboard from "./components/pages/Dashboard";
-import Sidebar from "./components/Layout/Sidebar";
-import { useNavigate, NavLink, Route, Routes } from "react-router-dom";
 import Main from "./components/Layout/Main";
-import Customers from "./components/pages/Customers";
-import Orders from "./components/pages/Orders";
-import OrderDetailPage from "./components/pages/OrderDetailPage";
-import Statistics from "./components/pages/Statistics";
+import Customers from "./components/pages/Customers/Customers";
+import Orders from "./components/pages/Orders/Orders";
+import OrderDetailPage from "./components/pages/Orders/OrderDetailPage";
+import Statistics from "./components/pages/Statistic/Statistics";
+import ProductPage from "./components/pages/Product/ProductPage";
+import AddProductPage from "./components/pages/Product/AddProductPage";
+import ProductDetailPage from "./components/pages/Product/ProductDetailPage";
+import { Route, Routes } from "react-router-dom";
+import Login from "./components/pages/User/Login";
 
 const App = () => {
   return (
     <Fragment>
-      {/* <div className="container-page">
-        <Sidebar></Sidebar>
-        <div className="main">
-          <div className="main-container">
-            <Header></Header>
-            <div className="content">
-              <Dashboard></Dashboard>
-            </div>
-          </div>
-        </div>
-      </div> */}
       <Routes>
         <Route path="/" element={<Main></Main>}>
           <Route
@@ -61,8 +52,16 @@ const App = () => {
             path="/products"
             element={
               <div className="content">
-                <Customers></Customers>
+                <ProductPage></ProductPage>
               </div>
+            }
+          ></Route>
+          <Route
+            path="/product/:productID"
+            element={
+              <Fragment>
+                <ProductDetailPage></ProductDetailPage>
+              </Fragment>
             }
           ></Route>
           <Route
@@ -70,6 +69,22 @@ const App = () => {
             element={
               <div className="content">
                 <Statistics></Statistics>
+              </div>
+            }
+          ></Route>
+          <Route
+            path="/products/addProduct"
+            element={
+              <div className="content">
+                <AddProductPage></AddProductPage>
+              </div>
+            }
+          ></Route>
+          <Route
+            path="/login"
+            element={
+              <div className="content">
+                <Login></Login>
               </div>
             }
           ></Route>
