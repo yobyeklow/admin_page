@@ -1,7 +1,9 @@
 import React, { Fragment } from "react";
 import Dashboard from "./components/pages/Dashboard";
 import Main from "./components/Layout/Main";
-import Customers from "./components/pages/Customers/Customers";
+
+import CustomerPage from "./components/pages/Customers/CustomerPage";
+import CustomerDetailsPage from "./components/pages/Customers/CustomerDetailsPage";
 import Orders from "./components/pages/Orders/Orders";
 import OrderDetailPage from "./components/pages/Orders/OrderDetailPage";
 import Statistics from "./components/pages/Statistic/Statistics";
@@ -28,7 +30,15 @@ const App = () => {
             path="/customers"
             element={
               <div className="content">
-                <Customers></Customers>
+                <CustomerPage></CustomerPage>
+              </div>
+            }
+          ></Route>
+          <Route
+            path="/customer/:id"
+            element={
+              <div className="content">
+                <CustomerDetailsPage></CustomerDetailsPage>
               </div>
             }
           ></Route>

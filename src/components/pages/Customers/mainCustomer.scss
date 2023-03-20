@@ -1,0 +1,21 @@
+.main-customer .box_item {
+  padding: 20px 10px;
+}
+.main-customer .box_item .top-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.main-customer .box_item .top-content::after {
+  position: absolute;
+  content: "";
+  height: 1px;
+  width: 90%;
+  opacity: 50%;
+  background-color: gray;
+  bottom: 0;
+}
+.main-customer .box_item .bottom-content {
+  padding: 20px 10px;
+}

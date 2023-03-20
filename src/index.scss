@@ -861,10 +861,12 @@
   border-radius: 100%;
   background-color: green;
 }
-.productPages {
+.productPages,
+.customerPages {
   width: 100%;
 }
-.productPages .main .top {
+.productPages .main .top,
+.customerPages .main .top {
   display: flex;
   position: sticky;
   align-items: center;
@@ -878,21 +880,25 @@
   border-top-left-radius: 15px;
   border-bottom: 0px;
 }
-.productPages .main .search-tool {
+.productPages .main .search-tool,
+.customerPages .main .search-tool {
   width: 450px;
   height: 35px;
   position: relative;
 }
-.productPages .top .title {
+.productPages .top .title,
+.customerPages .top .title {
   display: flex;
   align-items: center;
   gap: 10px;
 }
-.productPages .title > h3 {
+.productPages .title > h3,
+.customerPages .title > h3 {
   font-size: 18px;
   font-weight: 500;
 }
-.productPages .search-tool > input {
+.productPages .search-tool > input,
+.customerPages .search-tool > input {
   height: 100%;
   width: 100%;
   display: inline-block;
@@ -902,7 +908,8 @@
   border-radius: 15px;
   padding: 10px;
 }
-.productPages .search-tool .search-icon {
+.productPages .search-tool .search-icon,
+.customerPages .search-tool .search-icon {
   position: absolute;
   top: 0px;
   right: 0px;
@@ -914,18 +921,21 @@
   border-top-right-radius: 15px;
   border-bottom-right-radius: 15px;
 }
-.productPages .main-product {
+.productPages .main-product,
+.customerPages .main-customer {
   height: 100vh;
   background-color: rgb(255, 255, 255);
   border: 1px solid gray;
 }
-.main-product .graph_box {
+.main-product .graph_box,
+.main-customer .graph_box {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 30px;
   padding: 30px 30px;
 }
-.main-product .graph_box .box_item {
+.main-product .graph_box .box_item,
+.main-customer .graph_box .box_item {
   position: relative;
   max-width: 300px;
   background-color: white;
@@ -993,6 +1003,18 @@
   z-index: 30;
   animation: modal 0.2s ease-in-out;
 }
+.main-customer .box_item .edit-item {
+  display: none;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  border-radius: 15px;
+  background-color: rgba(151, 150, 150, 0.15);
+  z-index: 30;
+  animation: modal 0.2s ease-in-out;
+}
 @keyframes modal {
   from {
     transform: translateY(10%);
@@ -1006,7 +1028,8 @@
     transform: translateY(0%);
   }
 }
-.main-product .box_item .edit-container {
+.main-product .box_item .edit-container,
+.main-customer .box_item .edit-container {
   height: 50px;
   position: absolute;
   background-color: white;
@@ -1022,7 +1045,8 @@
   border-bottom-right-radius: 15px;
   border-bottom-left-radius: 15px;
 }
-.main-product .box_item .edit-container::after {
+.main-product .box_item .edit-container::after,
+.main-customer .box_item .edit-container::after {
   height: 100%;
   position: absolute;
   width: 1px;
@@ -1031,29 +1055,36 @@
   opacity: 50%;
 }
 .main-product .edit-item .edit-btn,
-.main-product .edit-item .delete-btn {
+.main-product .edit-item .delete-btn,
+.main-customer .edit-item .edit-btn,
+.main-customer .edit-item .delete-btn {
   width: 40px;
   height: 40px;
   cursor: pointer;
   padding: 3px 3px;
 }
-.main-product .edit-item .edit-btn {
-  margin-right: 20px;
+.main-product .edit-item .edit-btn,
+.main-customer .edit-item .edit-btn {
+  margin-right: 17px;
 }
-.main-product .edit-item .delete-btn {
+.main-product .edit-item .delete-btn,
+.main-customer .edit-item .delete-btn {
   margin-left: 30px;
 }
-.main-product .edit-btn svg {
+.main-product .edit-btn svg,
+.main-customer .edit-btn svg {
   width: 100%;
   height: 100%;
   color: blue;
 }
-.main-product .delete-btn svg {
+.main-product .delete-btn svg,
+.main-customer .delete-btn svg {
   width: 100%;
   height: 100%;
   color: red;
 }
-.main-product .box_item:hover .edit-item {
+.main-product .box_item:hover .edit-item,
+.main-customer .box_item:hover .edit-item {
   display: inline-block;
 }
 

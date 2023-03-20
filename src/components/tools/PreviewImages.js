@@ -2,11 +2,15 @@ import React, { Fragment, useState } from "react";
 
 const PreviewImages = ({ file }) => {
   const [preview, setPreview] = useState("");
-  const reader = new FileReader();
-  reader.readAsDataURL(file);
-  reader.onload = () => {
-    setPreview(reader.result);
-  };
+  if (typeof file === "string") {
+    setPreview(`'${file}'`);
+  } else {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      setPreview(reader.result);
+    };
+  }
   return (
     <Fragment>
       {preview && (

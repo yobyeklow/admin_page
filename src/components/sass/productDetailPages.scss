@@ -91,6 +91,17 @@ wrapper > * {
 }
 
 input {
-  min-width: 1px;
+  min-width: 2px;
   padding: 0;
+}
+.icon-percent {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 12px 10px;
+  background: white;
+  border: 1px solid rgb(0, 0, 0);
+
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
 }

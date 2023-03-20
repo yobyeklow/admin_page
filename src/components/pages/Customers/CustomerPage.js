@@ -1,43 +1,46 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
-
-import { getProduct } from "../../../store/products/productState";
 import { request } from "../../utils/request";
-const ProductPage = () => {
-  const dispatch = useDispatch();
-  const [data, setData] = useState(null);
-  const deleteItem = async (id) => {
+import avatar from "../../../image/avartar.jpg";
+import "../Customers/mainCustomer.scss";
+import { Link } from "react-router-dom";
+const CustomerPage = () => {
+  const [data, setData] = useState([]);
+  const FetchingData = async () => {
     await request
-      .delete(`/products/${id}`)
+      .get("/user")
       .then((res) => {
-        console.log(res);
+        setData(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
   };
-  const fetchData = async () => {
-    const response = await request.get("/products");
-    setData(response.data);
+  const deleteItem = async () => {
+    await request
+      .delete("/user")
+      .then((res) => {
+        setData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   useEffect(() => {
-    fetchData();
+    FetchingData();
   }, [data]);
-
   return (
-    <div className="productPages">
+    <div className="customerPages">
       <div className="title-page">
-        <h3>Products</h3>
+        <h3>Customers</h3>
       </div>
       <div className="main">
         <div className="top">
           <div className="title">
-            <h3>All products</h3>
+            <h3>All customers</h3>
             <span>({data?.length})</span>
           </div>
           <div className="search-tool">
-            <input placeholder="Enter product name" type="text"></input>
+            <input placeholder="Enter customer name" type="text"></input>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -54,38 +57,17 @@ const ProductPage = () => {
             </svg>
           </div>
         </div>
-        <div className="main-product">
+        <div className="main-customer">
           <div className="graph_box">
-            <div className="box_item">
-              <Link to="/products/addProduct" className="add-product-btn">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="w-7 h-7 add-icon"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 4.5v15m7.5-7.5h-15"
-                  />
-                </svg>
-              </Link>
-            </div>
             {data?.length > 0 &&
-              data?.map((item) => {
+              data.map((item) => {
                 return (
-                  <div key={item._id} className="box_item">
+                  <div className="box_item">
                     <div className="edit-item">
                       <div className="edit-container">
                         <Link
-                          onClick={() => {
-                            dispatch(getProduct(item._id));
-                          }}
                           to={{
-                            pathname: `/product/${item._id}`,
+                            pathname: `/customer/${item._id}`,
                           }}
                           state={{ item: item }}
                           className="edit-btn"
@@ -126,24 +108,28 @@ const ProductPage = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="top-content relative">
-                      <img src={item.images} alt="" />
-                      <h3 className="absolute top-3 right-4 text-gray z-50 text-base text-slate-500">
-                        #1
+                    <div className="top-content">
+                      <img
+                        src={avatar}
+                        className="w-[150px] h-[150px] object-fit overflow-hidden rounded-full
+                p-1 border-2 border-gray-400 mb-5"
+                        alt=""
+                      />
+                      <h3 className="text-lg font-semibold mb-2">
+                        {item.name}
+                      </h3>
+                      <h3 className="mb-2 text-base text-gray-400 font-medium">
+                        +84 {item.phone}
+                      </h3>
+                      <h3 className="mb-5 text-sm font-semibold">
+                        Email:{item.email}
                       </h3>
                     </div>
-                    <div className="box-content">
-                      <h2>Name:{item.name}</h2>
-                      <h3>Color:{item.color}</h3>
-                      <h3>
-                        Price:
-                        {item.price.toLocaleString("it-IT", {
-                          style: "currency",
-                          currency: "VND",
-                        })}{" "}
+                    <div className="bottom-content">
+                      <h3 className="text-base font-semibold">Address</h3>
+                      <h3 className="mt-2 text-sm text-gray-400">
+                        {item.address}
                       </h3>
-                      <h3>Quantity:{item.quantity}</h3>
-                      <h3>Sold:{item.sold}</h3>
                     </div>
                   </div>
                 );
@@ -155,4 +141,4 @@ const ProductPage = () => {
   );
 };
 
-export default ProductPage;
+export default CustomerPage;
