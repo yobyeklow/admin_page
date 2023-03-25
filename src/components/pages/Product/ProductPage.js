@@ -23,7 +23,7 @@ const ProductPage = () => {
   };
   useEffect(() => {
     fetchData();
-  }, [data]);
+  }, []);
 
   return (
     <div className="productPages">

@@ -2,92 +2,101 @@ import React from "react";
 import iphone14 from "../../../image/iphone14pro_tim.png";
 import MQD83 from "../../../image/MQD83.jpg";
 import info_avt from "../../../image/info.png";
+import { useLocation, useNavigate } from "react-router-dom";
 const OrderDetailPage = () => {
+  const { state } = useLocation();
+  const [tax, delivery] = [0, 50000];
+  const data = state.order;
+  console.log(data);
+  const formatter = new Intl.NumberFormat("it-IT", {
+    style: "currency",
+    currency: "VND",
+  });
+  const navigate = useNavigate();
   return (
     <div className="order-details">
+      <div
+        onClick={() => {
+          navigate(-1);
+        }}
+        className="backForward"
+      >
+        <span className="material-symbols-outlined text-lg text-blue-300">
+          west
+        </span>
+        <h3>Orders</h3>
+      </div>
       <div className="title">
-        <h1>#12345</h1>
+        <h1>#{data.products.length}</h1>
         <span>PRODUCTS</span>
         <div className="checkpoint">
-          <span class="material-symbols-outlined">done</span>
-          <span>Delivered</span>
+          {(data.orderStatus === "Processing" ||
+            data.orderStatus === "Dispatched" ||
+            data.orderStatus === "Cash on Delivery") && (
+            <>
+              <span className="material-symbols-outlined pending">
+                more_horiz
+              </span>
+            </>
+          )}
+          {(data.orderStatus === "Cancelled" ||
+            data.orderStatus === "Not Processed") && (
+            <>
+              <span className="material-symbols-outlined cancel ">close</span>
+            </>
+          )}
+          {data.orderStatus === "Delivered" && (
+            <>
+              <span className="material-symbols-outlined success">done</span>
+            </>
+          )}
+          <span>{data.orderStatus}</span>
         </div>
       </div>
       <div className="content mt-8">
         <div className="left-container">
-          <div className="boxItem">
-            <div className="top-content">
-              <img src={iphone14} alt="" />
-            </div>
-            <div className="bottom-content">
-              <div className="left">
-                <h2>Iphone 14 Pro</h2>
-                <span>Quantity - 1</span>
-              </div>
-              <div className="right">
-                <h2>Price</h2>
-                <span>10.000.000 VND</span>
-              </div>
-            </div>
+          <div className="order-item">
+            {data.products?.length > 0 &&
+              data.products.map((item) => {
+                return (
+                  <div key={item._id} className="boxItem">
+                    <div className="top-content">
+                      <img src={item.product.images} alt="" />
+                    </div>
+                    <div className="bottom-content">
+                      <div className="left">
+                        <h2>{item.product.name}</h2>
+                        <span>Quantity - {item.count}</span>
+                      </div>
+                      <div className="right">
+                        <h2>Price</h2>
+                        <span>{formatter.format(item.price)}</span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
           </div>
-          <div className="boxItem">
-            <div className="top-content">
-              <img src={iphone14} alt="" />
+          <div className="summary-order">
+            <h1>Payment summary</h1>
+            <div className="flex items-center justify-between mb-3">
+              <h3>
+                Subtotal <span>({data.products.length} items)</span>
+              </h3>
+              <h3>{formatter.format(data.paymentIntent.amount)}</h3>
             </div>
-            <div className="bottom-content">
-              <div className="left">
-                <h2>Iphone 14 Pro</h2>
-                <span>Quantity - 1</span>
-              </div>
-              <div className="right">
-                <h2>Price</h2>
-                <span>10.000.000 VND</span>
-              </div>
+            <div className="flex items-center justify-between mb-3">
+              <h3>Delivery</h3>
+              <h3>{formatter.format(delivery)}</h3>
             </div>
-          </div>
-          <div className="boxItem">
-            <div className="top-content">
-              <img src={MQD83} alt="" />
+            <div className="flex items-center justify-between mb-3">
+              <h3>Tax</h3>
+              <h3>{formatter.format(tax)}</h3>
             </div>
-            <div className="bottom-content">
-              <div className="left">
-                <h2>MQD83</h2>
-                <span>Quantity - 1</span>
-              </div>
-              <div className="right">
-                <h2>Price</h2>
-                <span>5.000.000 VND</span>
-              </div>
-            </div>
-          </div>
-          <div className="boxItem">
-            <div className="top-content">
-              <img src={iphone14} alt="" />
-            </div>
-            <div className="bottom-content">
-              <div className="left">
-                <h2>Iphone 14 Pro</h2>
-                <span>Quantity - 1</span>
-              </div>
-              <div className="right">
-                <h2>Price</h2>
-                <span>10.000.000 VND</span>
-              </div>
-            </div>
-          </div>
-          <div className="boxItem">
-            <div className="top-content">
-              <img src={iphone14} alt="" />
-            </div>
-            <div className="bottom-content">
-              <div className="left">
-                <h2>Iphone 14 Pro</h2>
-                <span>Quantity - 1</span>
-              </div>
-              <div className="right">
-                <h2>Price</h2>
-                <span>10.000.000 VND</span>
-              </div>
+
+            <div className="text-base flex items-center justify-between font-semibold">
+              <h3>Total paid by customer</h3>
+              <h3>{formatter.format(data.paymentIntent.amount + 50000)}</h3>
             </div>
           </div>
         </div>
@@ -98,14 +107,14 @@ const OrderDetailPage = () => {
             </div>
             <div className="info-customer">
               <div className="customer-avartar">
-                <img src={info_avt} alt="" />
+                <img src={data.orderBy.avatar} alt="" />
               </div>
               <div className="customer-name">
-                <h3>Khang Ngô</h3>
+                <h3>{data.orderBy.name}</h3>
               </div>
               <div className="customer-contact">
-                <h3>khangb1906491@gmail.com</h3>
-                <h3>+84 0852896171</h3>
+                <h3>{data.orderBy.email}</h3>
+                <h3>+84 {data.orderBy.phone}</h3>
               </div>
             </div>
           </div>
@@ -115,9 +124,7 @@ const OrderDetailPage = () => {
                 <h3 className="text-xl mb-2 font-medium text-black">
                   Shipping address
                 </h3>
-                <h3 className="text-sm">
-                  315 Đ. Nguyễn Văn Linh, Phường An Khánh, Ninh Kiều, Cần Thơ
-                </h3>
+                <h3 className="text-sm">{data.orderBy.address}</h3>
               </div>
               <div className="shipping-icon">
                 <svg
@@ -141,7 +148,7 @@ const OrderDetailPage = () => {
                 <h3 className="text-xl mb-2 font-medium text-black">
                   Payment methods
                 </h3>
-                <h3 className="text-sm">Banking Transfer</h3>
+                <h3 className="text-sm">{data.paymentIntent.method}</h3>
               </div>
               <div className="payment-icon">
                 <svg
@@ -150,7 +157,7 @@ const OrderDetailPage = () => {
                   viewBox="0 0 24 24"
                   strokeWidth="1.5"
                   stroke="currentColor"
-                  class="w-6 h-6"
+                  className="w-6 h-6"
                 >
                   <path
                     strokeLinecap="round"

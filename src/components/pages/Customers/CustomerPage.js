@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { request } from "../../utils/request";
-import avatar from "../../../image/avartar.jpg";
+import avatar from "../../../image/avatarDefault.png";
 import "../Customers/mainCustomer.scss";
 import { Link } from "react-router-dom";
 const CustomerPage = () => {
@@ -27,7 +27,8 @@ const CustomerPage = () => {
   };
   useEffect(() => {
     FetchingData();
-  }, [data]);
+  }, []);
+
   return (
     <div className="customerPages">
       <div className="title-page">
@@ -62,7 +63,7 @@ const CustomerPage = () => {
             {data?.length > 0 &&
               data.map((item) => {
                 return (
-                  <div className="box_item">
+                  <div key={item._id} className="box_item">
                     <div className="edit-item">
                       <div className="edit-container">
                         <Link
@@ -110,10 +111,10 @@ const CustomerPage = () => {
                     </div>
                     <div className="top-content">
                       <img
-                        src={avatar}
+                        src={item.avatar || avatar}
                         className="w-[150px] h-[150px] object-fit overflow-hidden rounded-full
                 p-1 border-2 border-gray-400 mb-5"
-                        alt=""
+                        alt="avatar.png"
                       />
                       <h3 className="text-lg font-semibold mb-2">
                         {item.name}

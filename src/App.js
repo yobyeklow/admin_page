@@ -51,7 +51,7 @@ const App = () => {
             }
           ></Route>
           <Route
-            path="/orders/:orderID"
+            path="/order/:orderID"
             element={
               <Fragment>
                 <OrderDetailPage></OrderDetailPage>
