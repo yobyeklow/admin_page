@@ -978,9 +978,10 @@
 }
 .productPages .main-product,
 .customerPages .main-customer {
-  height: 100vh;
+  height: auto;
   background-color: rgb(255, 255, 255);
   border: 1px solid gray;
+  margin-bottom: 30px;
 }
 .main-product .graph_box,
 .main-customer .graph_box {

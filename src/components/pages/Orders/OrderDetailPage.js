@@ -65,7 +65,11 @@ const OrderDetailPage = () => {
                     </div>
                     <div className="bottom-content">
                       <div className="left">
-                        <h2>{item.product.name}</h2>
+                        <h2>
+                          {item.product.name} -{" "}
+                          {item.product.color.charAt(0).toUpperCase() +
+                            item.product.color.slice(1)}
+                        </h2>
                         <span>Quantity - {item.count}</span>
                       </div>
                       <div className="right">
