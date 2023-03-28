@@ -5,12 +5,13 @@ import { Form, Formik, useField } from "formik";
 import ImageInput from "../Product/ImageInput";
 import { useLocation, useNavigate } from "react-router-dom";
 import { request } from "../../utils/request";
-
+import * as Yup from "yup";
 const ProductDetailPage = (props) => {
   const [width, setWidth] = useState(0);
   const span = useRef();
   let { state } = useLocation();
   const navigate = useNavigate();
+
   const [content, setContent] = useState(`${state.item.name}`);
   useEffect(() => {
     setWidth(span.current.offsetWidth);
@@ -23,25 +24,48 @@ const ProductDetailPage = (props) => {
     await request
       .put(`/products/${state.item._id}`, values)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
   return (
     <>
       {state && (
         <Formik
           onSubmit={(values, action) => {
+            console.log(values);
             if (values.sale.isOnSale === false) {
               values.sale.salePercentage = 0;
             }
+            // values.name = content;
             handleUpdateData(values);
           }}
           initialValues={{
             ...state.item,
           }}
+          validationSchema={Yup.object({
+            name: Yup.string()
+              .required("Required")
+              .min(8, "Minimum 10 characters"),
+            description: Yup.string()
+              .required("Required")
+              .min(10, "Please enter the description of product"),
+            price: Yup.number()
+              .required("Required")
+              .positive("Must be a positive number"),
+            quantity: Yup.number()
+              .required("Required")
+              .positive("Must be a positive number"),
+            sold: Yup.number()
+              .required("Required")
+              .positive("Must be a positive number"),
+            color: Yup.string().required("Required"),
+            brand: Yup.string().required("Required"),
+            category: Yup.string().required("Required"),
+          })}
         >
           {(formik) => (
             <Form className="productDetail">
@@ -49,7 +73,7 @@ const ProductDetailPage = (props) => {
                 onClick={() => navigate(-1)}
                 className="backForward flex items-center gap-3 mb-5 cursor-pointer"
               >
-                <span class="material-symbols-outlined text-lg text-blue-300">
+                <span className="material-symbols-outlined text-lg text-blue-300">
                   west
                 </span>
                 <span className="text-lg text-blue-300">Products</span>
@@ -61,20 +85,27 @@ const ProductDetailPage = (props) => {
                       {content}
                     </span>
                     <input
-                      defaultValue={content}
+                      value={content}
                       type="text"
                       style={{ width }}
-                      onChange={changeHandler}
-                      id="productName"
+                      onChange={(e) => {
+                        changeHandler(e);
+                        formik.handleChange(e);
+                      }}
+                      id="name"
+                      name="name"
                       autoFocus
                     />
                   </wrapper>
-                  <label htmlFor="productName">
+                  <label htmlFor="name">
                     <span className="material-symbols-outlined">reply</span>
                   </label>
                 </div>
                 <button type="Submit">Publish</button>
               </div>
+              {formik.errors.name && formik.touched.name && (
+                <p className="text-red-600 text-base">{formik.errors.name}</p>
+              )}
               <div className="middle-content">
                 <div className="left-content">
                   <div className="image-info">
@@ -99,6 +130,7 @@ const ProductDetailPage = (props) => {
                       >
                         <option value="">Select color options...</option>
                         <option value="sliver">Sliver</option>
+                        <option value="white">White </option>
                         <option value="gold">Gold</option>
                         <option value="red">Red</option>
                         <option value="purple">Purple</option>
@@ -163,7 +195,8 @@ const ProductDetailPage = (props) => {
                         label="Product Series"
                         id="series"
                       >
-                        <option value="">Select series...</option>
+                        <option value="">None</option>
+
                         <option value="14 series">14 series</option>
                         <option value="13 series">13 series</option>
                         <option value="12 series">12 series</option>
@@ -178,7 +211,7 @@ const ProductDetailPage = (props) => {
                         label="Ram"
                         id="ram"
                       >
-                        <option value="">Select ram options...</option>
+                        <option value="">None</option>
                         <option value="4">4</option>
                         <option value="6">6</option>
                         <option value="8">8</option>
@@ -275,6 +308,7 @@ const ProductDetailPage = (props) => {
 };
 const MyInput = ({ label, ...props }) => {
   const [field, meta] = useField(props);
+
   return (
     <div className="flex flex-col gap-2 mb-5 flex-1">
       <label className="text-sm" htmlFor={props.id || props.name}>

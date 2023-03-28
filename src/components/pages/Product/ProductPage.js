@@ -10,7 +10,7 @@ const ProductPage = () => {
   const [data, setData] = useState(null);
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
-  const searchInput = useDebounce(query, 2000);
+  const searchInput = useDebounce(query, 500);
   const deleteItem = async (id) => {
     await request
       .delete(`/products/${id}`)
@@ -24,11 +24,10 @@ const ProductPage = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await request.get(
-        `/products?name[regex]=${searchInput}`
-      );
-      setData(response.data);
-      setLoading(false);
+      await request.get(`/products?name[regex]=${searchInput}`).then((res) => {
+        setData(res.data);
+        setLoading(false);
+      });
     } catch (err) {
       setLoading(false);
     }

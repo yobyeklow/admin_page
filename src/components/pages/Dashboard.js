@@ -1,9 +1,40 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import DoughnutChart from "../chart/DoughnutChart";
 import LineChart from "../chart/LineChart";
 import ip14 from "../../image/iphone14pro_tim.png";
 import MQD83 from "../../image/MQD83.jpg";
+import { request } from "../utils/request";
 const Dashboard = () => {
+  const [totalOrder, setTotalOrder] = useState(null);
+  const [totalUser, setTotalUser] = useState(null);
+  const config = {
+    style: "currency",
+    currency: "VND",
+    maximumFractionDigits: 9,
+  };
+  const formatted = new Intl.NumberFormat("it-IT", config);
+  const fetchingData = async () => {
+    try {
+      const responseOrder = await request.get("/order/");
+      setTotalOrder(responseOrder.data);
+      const responseCustomer = await request.get("/user/");
+      setTotalUser(responseCustomer.data.length);
+    } catch (err) {
+      setTotalOrder(null);
+      setTotalUser(null);
+    }
+  };
+  const calculate = () => {
+    let sum = 0;
+    totalOrder.forEach((item) => {
+      sum += item.paymentIntent.amount;
+    });
+    return sum;
+  };
+  useEffect(() => {
+    fetchingData();
+  }, []);
+
   return (
     <Fragment>
       <div className="title-content">
@@ -31,7 +62,7 @@ const Dashboard = () => {
             <div className="top-sales">
               <div className="left-components">
                 <h3>Total Sales</h3>
-                <h1>10.0000.000 VND</h1>
+                {totalOrder && <h1>{formatted.format(calculate())}</h1>}
               </div>
               <div className="right-components">
                 <span className="material-symbols-outlined">payments</span>
@@ -63,8 +94,8 @@ const Dashboard = () => {
           <div className="sales-content">
             <div className="top-sales">
               <div className="left-components">
-                <h3>Today Visitors</h3>
-                <h1>500</h1>
+                <h3>Today Customers</h3>
+                <h1>{totalUser}</h1>
               </div>
               <div className="right-components">
                 <span className="material-symbols-outlined">groups</span>
@@ -97,7 +128,7 @@ const Dashboard = () => {
             <div className="top-sales">
               <div className="left-components">
                 <h3>Today Orders</h3>
-                <h1>200</h1>
+                <h1>{totalOrder?.length}</h1>
               </div>
               <div className="right-components">
                 <span className="material-symbols-outlined">
@@ -180,7 +211,7 @@ const Dashboard = () => {
                   <th>
                     <div className="header-table">
                       <span>Status</span>
-                      <span class="material-symbols-outlined icon">
+                      <span className="material-symbols-outlined icon">
                         keyboard_arrow_down
                       </span>
                     </div>
@@ -188,42 +219,39 @@ const Dashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr className="body-table">
-                  <td>#78522135</td>
-                  <td className="product">
-                    <img src={ip14} alt="" />
-                    <span>Iphone 14 Pro</span>
-                  </td>
-                  <td>15/2/2023</td>
-                  <td>10.000.000</td>
-                  <td>
-                    <div className="success">Complete</div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>#78522135</td>
-                  <td className="product">
-                    <img src={MQD83} alt="" />
-                    <span>MQD83</span>
-                  </td>
-                  <td>15/2/2023</td>
-                  <td>10.000.000</td>
-                  <td>
-                    <div className="pending">Pending</div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>#78522135</td>
-                  <td className="product">
-                    <img src={ip14} alt="" />
-                    <span>Iphone 14 Pro</span>
-                  </td>
-                  <td>15/2/2023</td>
-                  <td>10.000.000</td>
-                  <td>
-                    <div className="warning">Cancled</div>
-                  </td>
-                </tr>
+                {totalOrder?.length > 0 &&
+                  totalOrder.reverse().map((item) => {
+                    return (
+                      <tr>
+                        <td>#{item._id}</td>
+                        <td className="product">
+                          <span>{item.orderBy.name}</span>
+                        </td>
+                        <td>{item.createdAt.slice(0, 10)}</td>
+                        <td>{formatted.format(item.paymentIntent.amount)}</td>
+                        <td>
+                          {(item.orderStatus === "Processing" ||
+                            item.orderStatus === "Dispatched" ||
+                            item.orderStatus === "Cash on Delivery") && (
+                            <>
+                              <div className="pending">Pending</div>
+                            </>
+                          )}
+                          {(item.orderStatus === "Cancelled" ||
+                            item.orderStatus === "Not Processed") && (
+                            <>
+                              <div className="warning">Cancelled</div>
+                            </>
+                          )}
+                          {item.orderStatus === "Delivered" && (
+                            <>
+                              <div className="success">Completed</div>
+                            </>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
               </tbody>
             </table>
           </div>
