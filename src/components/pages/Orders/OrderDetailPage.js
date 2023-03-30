@@ -1,7 +1,5 @@
 import React from "react";
-import iphone14 from "../../../image/iphone14pro_tim.png";
-import MQD83 from "../../../image/MQD83.jpg";
-import info_avt from "../../../image/info.png";
+import avatar from "../../../image/avatarDefault.png";
 import { useLocation, useNavigate } from "react-router-dom";
 const OrderDetailPage = () => {
   const { state } = useLocation();
@@ -34,8 +32,8 @@ const OrderDetailPage = () => {
             data.orderStatus === "Dispatched" ||
             data.orderStatus === "Cash on Delivery") && (
             <>
-              <span className="material-symbols-outlined pending">
-                more_horiz
+              <span class="material-symbols-outlined pending">
+                history_toggle_off
               </span>
             </>
           )}
@@ -53,7 +51,7 @@ const OrderDetailPage = () => {
           <span>{data.orderStatus}</span>
         </div>
       </div>
-      <div className="content mt-8">
+      <div className="content mt-8 mb-8">
         <div className="left-container">
           <div className="order-item">
             {data.products?.length > 0 &&
@@ -81,6 +79,7 @@ const OrderDetailPage = () => {
                 );
               })}
           </div>
+
           <div className="summary-order">
             <h1>Payment summary</h1>
             <div className="flex items-center justify-between mb-3">
@@ -111,7 +110,7 @@ const OrderDetailPage = () => {
             </div>
             <div className="info-customer">
               <div className="customer-avartar">
-                <img src={data.orderBy.avatar} alt="" />
+                <img src={data.orderBy.avatar || avatar} alt="" />
               </div>
               <div className="customer-name">
                 <h3>{data.orderBy.name}</h3>

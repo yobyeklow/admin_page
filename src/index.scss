@@ -15,7 +15,6 @@
 }
 .body {
   width: 100vw;
-  height: 100vh;
   overflow-x: hidden;
 }
 .container-page {
@@ -25,7 +24,6 @@
 .sidebar {
   background-color: white;
   width: 100%;
-  height: 100vh;
 }
 .sidebar .top-sidebar {
   width: 100%;
@@ -85,6 +83,7 @@
 }
 .main {
   background-color: #f9f9f9;
+  height: auto;
 }
 .main-container {
   width: 94%;
@@ -256,93 +255,104 @@
   font-size: 18px;
   font-weight: 500;
 }
-.table-fill {
-  background: white;
-  border-radius: 3px;
+
+.table-recent-orders {
   width: 100%;
-  // box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  animation: float 5s infinite;
-  padding: 20px;
+  border-collapse: separate;
+  border-spacing: 18px;
 }
 
-.table-fill th {
-  font-weight: 500;
-  padding-bottom: 20px;
-  text-align: left;
-  position: relative;
-}
-
-.table-fill th::after {
-  content: "";
-  top: 80%;
-  display: block;
+.table-recent-orders thead {
+  position: sticky;
+  top: 0;
   width: 100%;
-  height: 0.5px;
-  background-color: #959ca2;
-  opacity: 30%;
-  left: 0;
+}
+.table-recent-orders thead::after {
   position: absolute;
+  content: "";
+  background-color: black;
+  width: 100%;
+  height: 1px;
+  opacity: 50%;
 }
-.header-table {
+.table-recent-orders img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  overflow: hidden;
+  border-radius: 100%;
+}
+.table-recent-orders .profile {
   display: flex;
   align-items: center;
+  gap: 10px;
 }
-.header-table .icon {
-  opacity: 50%;
-  font-size: 20px;
-}
-.body-table {
-  border-bottom: 1px solid #fff;
-}
-.table-fill tr > td {
-  border-bottom: 0.5px solid #fff;
-}
-.table-fill td {
-  background: #ffffff;
-  padding: 25px 0;
-  text-align: left;
-  vertical-align: middle;
+.table-recent-orders .header-title {
   font-weight: 500;
-  font-size: 14px;
-  // text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
-  // font-family: "Times New Roman";
-  color: #5b656f;
+  font-size: 17px;
 }
-.table-fill td > img {
-  // width: 40px;
-  height: 30px;
-  object-fit: cover;
+.table-recent-orders .header-title .icon {
+  position: relative;
+  vertical-align: middle;
+  color: gray;
+  font-size: 24px;
+  opacity: 90%;
+}
+.table-recent-orders thead,
+.table-recent-orders tbody tr {
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+}
+.table-recent-orders tbody {
+  display: block;
+
+  overflow-y: scroll;
+  width: 100%;
+  max-height: 250px;
 }
 
-.table-fill .product {
-  display: flex;
-  column-gap: 20px;
-  align-items: center;
+.table-recent-orders tbody tr > td {
+  text-align: left;
+}
+.table-recent-orders tbody tr > td:first-child:hover {
+  color: blue;
+  cursor: pointer;
+}
+.table-body::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+.table-body::-webkit-scrollbar-thumb {
+  border-radius: 0.5rem;
+  background-color: #0004;
+  visibility: hidden;
+}
+.table-body:hover::-webkit-scrollbar-thumb {
+  visibility: visible;
 }
 .success {
   color: #1caf82;
-  background-color: #ecfbf2;
-  padding: 6px 4px;
-  border-radius: 30px;
+  background-color: #cbf5dc;
+  padding: 10px 10px;
+  border-radius: 15px;
 }
 .warning {
-  color: red;
-  background-color: #ffefeb;
-  padding: 6px 4px;
-  border-radius: 30px;
+  color: rgb(245, 5, 5);
+  background-color: #fcded6;
+  padding: 10px 9px;
+  border-radius: 15px;
 }
 .pending {
-  color: #ffc97c;
-  background-color: #fff8ed;
-  padding: 6px 4px;
-  border-radius: 30px;
+  color: #f3b052;
+  background-color: #fdfacb;
+  padding: 10px 17px;
+  border-radius: 15px;
 }
-.table-fill td:last-child {
-  text-align: center;
-}
+
 .box .bottom-content .chart {
   width: 100%;
-  margin-top: 50px;
+  margin-top: 75px;
   min-height: 250px;
 }
 .title-page {
@@ -478,8 +488,8 @@
   padding: 3px;
 }
 .table-content .checkpoint .icon-pending {
-  border: 1px solid #ccc907;
-  color: #a5a20c;
+  border: 1px solid #dfdf1a;
+  color: #d1cf5f;
   border-radius: 100%;
   font-size: 14px;
   padding: 3px;
@@ -504,18 +514,19 @@
   color: #0d19be;
   cursor: pointer;
 }
-.order-details .content {
+.order-details {
   width: 100%;
+  min-height: 120vh;
 }
+
 .order-details .title {
   display: flex;
   align-items: center;
   gap: 15px;
 }
 .order-details .title > h1 {
-  font-size: 35px;
+  font-size: 26px;
   font-weight: 500;
-  margin-right: 10px;
 }
 .order-details .title > span {
   background-color: rgb(255, 255, 255);
@@ -538,13 +549,13 @@
   padding: 4px;
 }
 .order-details .checkpoint > .pending {
-  background-color: #f1f51f;
-  border: 1px solid rgb(219, 219, 219);
-  color: rgb(178, 179, 171);
-  border-radius: 100%;
+  font-size: 28px;
+  color: black;
+  padding: 0 0;
   margin-right: 10px;
-  font-size: 14px;
-  padding: 4px;
+  color: rgb(236, 204, 22);
+  // background-color: ghostwhite;
+  // border-radius: 100%;
 }
 .order-details .checkpoint > .cancel {
   background-color: #da262f;
@@ -557,7 +568,6 @@
 .order-details .content {
   display: grid;
   grid-template-columns: 70% 30%;
-  height: 100%;
   grid-gap: 35px;
 }
 .order-details .left-container .order-item {
@@ -565,15 +575,17 @@
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 30px;
   width: 100%;
-  max-height: 500px;
+  height: auto;
 }
 .order-details .left-container .order-item .boxItem {
   max-height: 420px;
+  height: 100%;
   width: 100%;
   background-color: white;
   border-radius: 15px;
   padding: 15px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  margin-bottom: 10px;
 }
 
 .boxItem .top-content {
@@ -614,10 +626,7 @@
   font-weight: 500;
   color: black;
 }
-.order-details {
-  width: 100%;
-  height: 100%;
-}
+
 .order-details .right-container {
   // background-color: #fbfafc;
   // background-image: linear-gradient(white, #f0eeee);
@@ -633,9 +642,7 @@
   border-radius: 10px;
   width: calc(445px - 35px);
 }
-.order-details .top-content {
-  padding: 20px 0px;
-}
+
 .right-container .title {
   font-size: 20px;
   font-weight: 500;
@@ -701,7 +708,9 @@
   font-size: 16px;
   font-weight: 500;
 }
-
+.bottom-content {
+  margin-top: 20px;
+}
 .bottom-content .shipping {
   display: flex;
   justify-content: space-between;
@@ -735,7 +744,6 @@
   max-width: 200px;
 }
 .bottom-content .shipping-icon {
-  margin-bottom: 50px;
   padding: 8px;
   padding-left: 10px;
   border: 1px solid #bfd8fa;

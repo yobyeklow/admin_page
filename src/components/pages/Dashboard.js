@@ -4,6 +4,8 @@ import LineChart from "../chart/LineChart";
 import ip14 from "../../image/iphone14pro_tim.png";
 import MQD83 from "../../image/MQD83.jpg";
 import { request } from "../utils/request";
+import avatar from "../../image/avatarDefault.png";
+import { Link } from "react-router-dom";
 const Dashboard = () => {
   const [totalOrder, setTotalOrder] = useState(null);
   const [totalUser, setTotalUser] = useState(null);
@@ -34,7 +36,7 @@ const Dashboard = () => {
   useEffect(() => {
     fetchingData();
   }, []);
-
+  console.log(totalOrder);
   return (
     <Fragment>
       <div className="title-content">
@@ -169,96 +171,99 @@ const Dashboard = () => {
       </div>
       <div className="graph-box">
         <div className="box">
-          <div className="top-content">
-            <h3>Recent Orders</h3>
-          </div>
-          <div className="bottom-content">
-            <table className="table-fill">
-              <thead>
-                <tr>
-                  <th>
-                    <div className="header-table">
-                      <span>Order ID</span>
-                      <span className="material-symbols-outlined icon">
-                        keyboard_arrow_down
-                      </span>
-                    </div>
-                  </th>
-                  <th>
-                    <div className="header-table">
-                      <span>Product Name</span>
-                      <span className="material-symbols-outlined icon">
-                        keyboard_arrow_down
-                      </span>
-                    </div>
-                  </th>
-                  <th>
-                    <div className="header-table">
-                      <span>Date</span>
-                      <span className="material-symbols-outlined icon">
-                        keyboard_arrow_down
-                      </span>
-                    </div>
-                  </th>
-                  <th>
-                    <div className="header-table">
-                      <span>Price</span>
-                      <span className="material-symbols-outlined icon">
-                        keyboard_arrow_down
-                      </span>
-                    </div>
-                  </th>
-                  <th>
-                    <div className="header-table">
-                      <span>Status</span>
-                      <span className="material-symbols-outlined icon">
-                        keyboard_arrow_down
-                      </span>
-                    </div>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {totalOrder?.length > 0 &&
-                  totalOrder.reverse().map((item) => {
-                    return (
-                      <tr>
-                        <td>#{item._id}</td>
-                        <td className="product">
-                          <span>{item.orderBy.name}</span>
-                        </td>
-                        <td>{item.createdAt.slice(0, 10)}</td>
-                        <td>{formatted.format(item.paymentIntent.amount)}</td>
-                        <td>
-                          {(item.orderStatus === "Processing" ||
-                            item.orderStatus === "Dispatched" ||
-                            item.orderStatus === "Cash on Delivery") && (
-                            <>
-                              <div className="pending">Pending</div>
-                            </>
-                          )}
-                          {(item.orderStatus === "Cancelled" ||
-                            item.orderStatus === "Not Processed") && (
-                            <>
-                              <div className="warning">Cancelled</div>
-                            </>
-                          )}
-                          {item.orderStatus === "Delivered" && (
-                            <>
-                              <div className="success">Completed</div>
-                            </>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-              </tbody>
-            </table>
-          </div>
+          <h3 className="font-medium text-xl">Recent Orders</h3>
+
+          <table className="table-recent-orders">
+            <thead>
+              <tr>
+                <td className="header-title">
+                  <span>Order ID</span>
+                  <span className="material-symbols-outlined icon">
+                    expand_more
+                  </span>
+                </td>
+                <td className="header-title">
+                  <span>Order By</span>
+                  <span className="material-symbols-outlined icon">
+                    expand_more
+                  </span>
+                </td>
+                <td className="header-title">
+                  <span>Date</span>
+                  <span className="material-symbols-outlined icon">
+                    expand_more
+                  </span>
+                </td>
+                <td className="header-title">
+                  <span>Total Price</span>
+                  <span className="material-symbols-outlined icon">
+                    expand_more
+                  </span>
+                </td>
+                <td className="header-title">
+                  <span>Status</span>
+                  <span className="material-symbols-outlined icon">
+                    expand_more
+                  </span>
+                </td>
+              </tr>
+            </thead>
+            <tbody className="table-body">
+              {totalOrder?.length > 0 &&
+                totalOrder.map((item) => {
+                  return (
+                    <tr>
+                      <td>
+                        <Link
+                          state={{ order: item }}
+                          to={{
+                            pathname: `/order/${item._id}`,
+                          }}
+                        >
+                          {item._id.slice(0, 8) + "..."}
+                        </Link>
+                      </td>
+                      <td className="profile">
+                        <img src={item.orderBy.avatar || avatar} alt="" />
+                        <span>{item.orderBy.name}</span>
+                      </td>
+                      <td>
+                        <span>{item.createdAt.slice(0, 10)}</span>
+                      </td>
+                      <td>
+                        <span>
+                          {formatted.format(item.paymentIntent.amount)}
+                        </span>
+                      </td>
+                      <td>
+                        {(item.paymentIntent.status === "Processing" ||
+                          item.paymentIntent.status === "Dispatched" ||
+                          item.paymentIntent.status === "Cash on Delivery") && (
+                          <>
+                            <span className="pending">Pending</span>
+                          </>
+                        )}
+                        {(item.paymentIntent.status === "Cancelled" ||
+                          item.paymentIntent.status === "Not Processed") && (
+                          <>
+                            <span className="warning">Cancelled</span>
+                          </>
+                        )}
+                        {item.paymentIntent.status === "Delivered" && (
+                          <>
+                            <span className="success ">Complete</span>
+                          </>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
         </div>
         <div className="box">
           <div className="top-content">
-            <h3>Visit Customers</h3>
+            <h3 className="text-xl font-medium">Visit Customers</h3>
           </div>
           <div className="bottom-content">
             <div className="chart">
