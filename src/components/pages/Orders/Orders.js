@@ -8,6 +8,7 @@ const Orders = () => {
   const [statusValue, setStatusValue] = useState("");
   const handleChange = (value) => {
     setStatusValue(value);
+    console.log(value);
   };
   const FetchingData = async () => {
     await request
@@ -15,6 +16,7 @@ const Orders = () => {
       .then((res) => {
         setData(res.data);
         calculateOrder(res.data);
+        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -44,6 +46,7 @@ const Orders = () => {
 
   useEffect(() => {
     FetchingData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statusValue]);
   return (
     <div className="orders-page">

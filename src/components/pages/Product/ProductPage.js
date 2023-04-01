@@ -152,9 +152,9 @@ const ProductPage = () => {
                         </div>
                         <div className="top-content relative">
                           <img src={item.images} alt="" />
-                          <h3 className="absolute top-3 right-4 text-gray z-50 text-base text-slate-500">
+                          {/* <h3 className="absolute top-3 right-4 text-gray z-50 text-base text-slate-500">
                             #1
-                          </h3>
+                          </h3> */}
                         </div>
                         <div className="box-content">
                           <h2>Name:{item.name}</h2>

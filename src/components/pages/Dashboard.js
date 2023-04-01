@@ -1,8 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import DoughnutChart from "../chart/DoughnutChart";
 import LineChart from "../chart/LineChart";
-import ip14 from "../../image/iphone14pro_tim.png";
-import MQD83 from "../../image/MQD83.jpg";
 import { request } from "../utils/request";
 import avatar from "../../image/avatarDefault.png";
 import { Link } from "react-router-dom";
@@ -36,7 +34,7 @@ const Dashboard = () => {
   useEffect(() => {
     fetchingData();
   }, []);
-  console.log(totalOrder);
+
   return (
     <Fragment>
       <div className="title-content">
@@ -212,7 +210,7 @@ const Dashboard = () => {
               {totalOrder?.length > 0 &&
                 totalOrder.map((item) => {
                   return (
-                    <tr>
+                    <tr key={item._id}>
                       <td>
                         <Link
                           state={{ order: item }}

@@ -1,9 +1,52 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import LineChartStatistics from "../../chart/LineChartStatistics";
 import VerticalBarChart from "../../chart/LineChartStatistics.js";
 import iphone14 from "../../../image/iphone14pro_tim.png";
 import MQD83 from "../../../image/MQD83.jpg";
+import { request } from "../../utils/request";
 const Statistics = () => {
+  const [TotalCustomer, SetTotalCustomers] = useState();
+  const [TotalSale, SetTotalSale] = useState();
+  const [TotalProduct, setTotalProduct] = useState();
+  const FetchingOrdersData = async () => {
+    await request
+      .get("/order/")
+      .then((res) => {
+        SetTotalSale(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    await request
+      .get("/user/")
+      .then((res) => {
+        SetTotalCustomers(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    await request
+      .get("/products")
+      .then((res) => {
+        setTotalProduct(res.data);
+        CalculateRevenue();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const CalculateRevenue = () => {
+    let total = 0;
+    for (let item of TotalProduct.values()) {
+      let percent = (item.price * 25) / 100;
+      total = total + (item.price - percent) * item.quantity;
+    }
+    console.log(total);
+  };
+  useEffect(() => {
+    FetchingOrdersData();
+  }, []);
+
   return (
     <div className="statistics-page">
       <div className="title-page flex items-center gap-4">
@@ -112,7 +155,7 @@ const Statistics = () => {
                     viewBox="0 0 24 24"
                     strokeWidth="1"
                     stroke="black"
-                    class="w-8 h-8"
+                    className="w-8 h-8"
                   >
                     <path
                       strokeLinecap="round"
@@ -124,8 +167,10 @@ const Statistics = () => {
               </div>
             </div>
             <div className="sale-details mr-12">
-              <h3 className="text-xl font-semibold mb-2 w-[217px]">2.000</h3>
-              <h3 className="text-base text-gray-400">Total Visitors</h3>
+              <h3 className="text-xl font-semibold mb-2 w-[217px]">
+                {TotalCustomer?.length}
+              </h3>
+              <h3 className="text-base text-gray-400">Total Customers</h3>
             </div>
             <div className="sale-analyst flex flex-col gap-14 ml-3">
               <div className="icon bg-blue-100 w-10 h-10 flex items-center justify-center rounded-full">
@@ -146,13 +191,13 @@ const Statistics = () => {
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke-width="1.5"
+                  strokeWidth="1.5"
                   stroke="currentColor"
                   className="w-7 h-7 text-green-400"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z"
                   />
                 </svg>
