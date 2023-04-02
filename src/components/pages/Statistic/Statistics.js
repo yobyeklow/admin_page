@@ -2,17 +2,24 @@ import React, { useEffect, useState } from "react";
 import LineChartStatistics from "../../chart/LineChartStatistics";
 import VerticalBarChart from "../../chart/LineChartStatistics.js";
 import iphone14 from "../../../image/iphone14pro_tim.png";
-import MQD83 from "../../../image/MQD83.jpg";
+import { faker } from "@faker-js/faker";
 import { request } from "../../utils/request";
 const Statistics = () => {
-  const [TotalCustomer, SetTotalCustomers] = useState();
-  const [TotalSale, SetTotalSale] = useState();
+  const [TotalCustomer, setTotalCustomers] = useState();
+  const [TotalExpenses, setTotalExpenses] = useState();
+  const [TotalSale, setTotalSale] = useState();
   const [TotalProduct, setTotalProduct] = useState();
+  const monthPre = new Date().getMonth() - 1;
+  const monthNow = new Date().getMonth();
+
   const FetchingOrdersData = async () => {
     await request
       .get("/order/")
       .then((res) => {
-        SetTotalSale(res.data);
+        const sale = processTotalSale(res.data);
+        setTotalSale(sale);
+        const expenses = processTotalExpenses(sale);
+        setTotalExpenses(expenses);
       })
       .catch((err) => {
         console.log(err);
@@ -20,7 +27,8 @@ const Statistics = () => {
     await request
       .get("/user/")
       .then((res) => {
-        SetTotalCustomers(res.data);
+        const customer = processTotalCustomer(res.data, monthNow);
+        setTotalCustomers(customer);
       })
       .catch((err) => {
         console.log(err);
@@ -29,20 +37,46 @@ const Statistics = () => {
       .get("/products")
       .then((res) => {
         setTotalProduct(res.data);
-        CalculateRevenue();
       })
       .catch((err) => {
         console.log(err);
       });
   };
-  const CalculateRevenue = () => {
-    let total = 0;
-    for (let item of TotalProduct.values()) {
-      let percent = (item.price * 25) / 100;
-      total = total + (item.price - percent) * item.quantity;
-    }
-    console.log(total);
+  const processTotalSale = (orders) => {
+    let result = Array(13).fill(0);
+    orders.forEach((order) => {
+      let month = order.createdAt.slice(6, 7);
+      result[month] += order.paymentIntent.amount;
+    });
+    return result;
   };
+  const processTotalExpenses = (orders) => {
+    let result = Array(13).fill(0);
+    orders.forEach((order, index) => {
+      result[index] +=
+        order -
+        order * 0.35 +
+        parseInt(faker.finance.amount(10000000, 100000000, 0));
+    });
+    return result;
+  };
+  const processTotalCustomer = (customers) => {
+    let result = Array(13).fill(0);
+    customers.forEach((customer) => {
+      let month = parseInt(customer.createdAt.slice(6, 7));
+      result[month] += 1;
+    });
+    return result;
+  };
+  const comparePercent = (total, monthPre, monthNow) => {
+    if (total[monthPre] == 0) return 100;
+    const percent = (total[monthNow] - total[monthPre]) / total[monthPre];
+    return percent * 100;
+  };
+  const formatter = new Intl.NumberFormat("it-IT", {
+    style: "currency",
+    currency: "VND",
+  });
   useEffect(() => {
     FetchingOrdersData();
   }, []);
@@ -89,19 +123,47 @@ const Statistics = () => {
                 </div>
               </div>
             </div>
-            <div className="sale-details mr-12">
-              <h3 className="text-xl font-semibold mb-2 w-[217px]">
-                100.000.000.000 VND
-              </h3>
-              <h3 className="text-base text-gray-400">Total Sales</h3>
-            </div>
-            <div className="sale-analyst flex flex-col gap-14 ml-3">
-              <div className="icon bg-blue-100 w-10 h-10 flex items-center justify-center rounded-full">
-                <span className="material-symbols-outlined text-slate-500 text-lg">
-                  question_mark
-                </span>
+            <div className="flex-1">
+              <div className="flex justify-between">
+                <div>
+                  {TotalSale && (
+                    <h3 className="text-xl font-semibold mb-2 w-[217px]">
+                      {formatter.format(TotalSale[monthNow])}
+                    </h3>
+                  )}
+                  <h3 className="text-base text-gray-400 mb-3">Total Sales</h3>
+                </div>
+                <div className="icon mr-5 bg-blue-100 w-10 h-10 flex items-center justify-center rounded-full">
+                  <span className="material-symbols-outlined text-slate-500 text-lg">
+                    question_mark
+                  </span>
+                </div>
               </div>
-              <h3 className="text-orange-500 font-semibold">+ 24%</h3>
+              <div className="flex justify-between">
+                <h3 className="text-orange-500 font-semibold">This month</h3>
+                {TotalSale && (
+                  <div className="text-orange-500 font-semibold mr-5">
+                    {Math.round(comparePercent(TotalSale, monthPre, monthNow)) >
+                    0 ? (
+                      <h3>
+                        +{" "}
+                        {Math.round(
+                          comparePercent(TotalSale, monthPre, monthNow)
+                        )}{" "}
+                        %
+                      </h3>
+                    ) : (
+                      <h3>
+                        -{" "}
+                        {Math.round(
+                          comparePercent(TotalSale, monthPre, monthNow)
+                        )}{" "}
+                        %
+                      </h3>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
           <div className="boxItem">
@@ -130,19 +192,52 @@ const Statistics = () => {
                 </div>
               </div>
             </div>
-            <div className="sale-details mr-12">
-              <h3 className="text-xl font-semibold mb-2 w-[217px]">
-                80.000.000 VND
-              </h3>
-              <h3 className="text-base text-gray-400">Total Expenses</h3>
-            </div>
-            <div className="sale-analyst flex flex-col gap-14 ml-3">
-              <div className="icon bg-blue-100 w-10 h-10 flex items-center justify-center rounded-full">
-                <span className="material-symbols-outlined text-slate-500 text-lg">
-                  question_mark
-                </span>
+            <div className="flex-1">
+              <div className="flex justify-between">
+                <div>
+                  {TotalSale && (
+                    <>
+                      <h3 className="text-xl font-semibold mb-2 w-[217px]">
+                        {formatter.format(TotalExpenses[monthNow])}
+                      </h3>
+                      <h3 className="text-base text-gray-400 mb-3">
+                        Total Expenses
+                      </h3>
+                    </>
+                  )}
+                </div>
+                <div className="icon mr-5 bg-blue-100 w-10 h-10 flex items-center justify-center rounded-full">
+                  <span className="material-symbols-outlined text-slate-500 text-lg">
+                    question_mark
+                  </span>
+                </div>
               </div>
-              <h3 className="text-purple font-semibold">- 20%</h3>
+              <div className="flex justify-between">
+                <h3 className="text-purple font-semibold">This month</h3>{" "}
+                {TotalExpenses && (
+                  <div className="text-purple font-semibold mr-5">
+                    {Math.round(
+                      comparePercent(TotalExpenses, monthPre, monthNow)
+                    ) > 0 ? (
+                      <h3>
+                        +{" "}
+                        {Math.round(
+                          comparePercent(TotalExpenses, monthPre, monthNow)
+                        )}{" "}
+                        %
+                      </h3>
+                    ) : (
+                      <h3>
+                        -{" "}
+                        {Math.round(
+                          comparePercent(TotalExpenses, monthPre, monthNow)
+                        )}{" "}
+                        %
+                      </h3>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
           <div className="boxItem">
@@ -166,19 +261,50 @@ const Statistics = () => {
                 </div>
               </div>
             </div>
-            <div className="sale-details mr-12">
-              <h3 className="text-xl font-semibold mb-2 w-[217px]">
-                {TotalCustomer?.length}
-              </h3>
-              <h3 className="text-base text-gray-400">Total Customers</h3>
-            </div>
-            <div className="sale-analyst flex flex-col gap-14 ml-3">
-              <div className="icon bg-blue-100 w-10 h-10 flex items-center justify-center rounded-full">
-                <span class="material-symbols-outlined text-slate-500 text-lg">
-                  question_mark
-                </span>
+            <div className="flex-1">
+              <div className="flex justify-between">
+                <div>
+                  {TotalCustomer && (
+                    <h3 className="text-xl font-semibold mb-2 w-[217px]">
+                      {TotalCustomer[monthNow]}
+                    </h3>
+                  )}
+                  <h3 className="text-base text-gray-400 mb-3">
+                    Total Customers
+                  </h3>
+                </div>
+                <div className="icon mr-5 bg-blue-100 w-10 h-10 flex items-center justify-center rounded-full">
+                  <span className="material-symbols-outlined text-slate-500 text-lg">
+                    question_mark
+                  </span>
+                </div>
               </div>
-              <h3 className="text-green-600 font-semibold">+ 10%</h3>
+              <div className="flex justify-between">
+                <h3 className="text-green-500 font-semibold">This month</h3>
+                {TotalCustomer && (
+                  <div className="text-green-500 font-semibold mr-5">
+                    {Math.round(
+                      comparePercent(TotalCustomer, monthPre, monthNow)
+                    ) > 0 ? (
+                      <h3>
+                        +{" "}
+                        {Math.round(
+                          comparePercent(TotalCustomer, monthPre, monthNow)
+                        )}{" "}
+                        %
+                      </h3>
+                    ) : (
+                      <h3>
+                        -{" "}
+                        {Math.round(
+                          comparePercent(TotalCustomer, monthPre, monthNow)
+                        )}{" "}
+                        %
+                      </h3>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
