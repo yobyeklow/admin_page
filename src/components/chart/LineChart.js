@@ -108,7 +108,7 @@ const LineChart = () => {
       },
     ],
   };
-  console.log(dataOrder, monthOrder);
+
   useEffect(() => {
     fetchingData();
   }, []);

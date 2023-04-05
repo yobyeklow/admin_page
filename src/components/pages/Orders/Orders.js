@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { request } from "../../utils/request";
 import Swal from "sweetalert2";
+import useDebounce from "../../../hooks/useDebounce";
 const Orders = () => {
   const [data, setData] = useState([]);
-  const [edit, setEdit] = useState(false);
+  const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(false);
+  const searchInput = useDebounce(query, 500);
   const [statusValue, setStatusValue] = useState("");
   const handleChange = (value) => {
     setStatusValue(value);

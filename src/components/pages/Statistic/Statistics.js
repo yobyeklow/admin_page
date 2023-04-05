@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
-import LineChartStatistics from "../../chart/LineChartStatistics";
-import VerticalBarChart from "../../chart/LineChartStatistics.js";
+import React, { Suspense, lazy, useEffect, useState } from "react";
+// import LineChartStatistics from "../../chart/LineChartStatistics";
+import VerticalBarChart from "../../chart/VerticalBarChart.js";
 import iphone14 from "../../../image/iphone14pro_tim.png";
 import { faker } from "@faker-js/faker";
 import { request } from "../../utils/request";
+
+import LineChartStatistics from "../../chart/LineChartStatistics.js";
+
 const Statistics = () => {
   const [TotalCustomer, setTotalCustomers] = useState();
   const [TotalExpenses, setTotalExpenses] = useState();
@@ -20,7 +23,9 @@ const Statistics = () => {
         setTotalSale(sale);
         const expenses = processTotalExpenses(sale);
         setTotalExpenses(expenses);
+        return expenses;
       })
+
       .catch((err) => {
         console.log(err);
       });
@@ -53,10 +58,9 @@ const Statistics = () => {
   const processTotalExpenses = (orders) => {
     let result = Array(13).fill(0);
     orders.forEach((order, index) => {
-      result[index] +=
-        order -
-        order * 0.35 +
-        parseInt(faker.finance.amount(10000000, 100000000, 0));
+      if (order !== 0) {
+        result[index] += parseInt(faker.finance.amount(50000000, 300000000, 0));
+      }
     });
     return result;
   };
@@ -69,7 +73,7 @@ const Statistics = () => {
     return result;
   };
   const comparePercent = (total, monthPre, monthNow) => {
-    if (total[monthPre] == 0) return 100;
+    if (total[monthPre] === 0) return 100;
     const percent = (total[monthNow] - total[monthPre]) / total[monthPre];
     return percent * 100;
   };
@@ -80,7 +84,7 @@ const Statistics = () => {
   useEffect(() => {
     FetchingOrdersData();
   }, []);
-
+  console.log(TotalProduct);
   return (
     <div className="statistics-page">
       <div className="title-page flex items-center gap-4">
@@ -155,8 +159,10 @@ const Statistics = () => {
                     ) : (
                       <h3>
                         -{" "}
-                        {Math.round(
-                          comparePercent(TotalSale, monthPre, monthNow)
+                        {Math.abs(
+                          Math.round(
+                            comparePercent(TotalSale, monthPre, monthNow)
+                          )
                         )}{" "}
                         %
                       </h3>
@@ -229,8 +235,10 @@ const Statistics = () => {
                     ) : (
                       <h3>
                         -{" "}
-                        {Math.round(
-                          comparePercent(TotalExpenses, monthPre, monthNow)
+                        {Math.abs(
+                          Math.round(
+                            comparePercent(TotalExpenses, monthPre, monthNow)
+                          )
                         )}{" "}
                         %
                       </h3>
@@ -296,8 +304,10 @@ const Statistics = () => {
                     ) : (
                       <h3>
                         -{" "}
-                        {Math.round(
-                          comparePercent(TotalCustomer, monthPre, monthNow)
+                        {Math.abs(
+                          Math.round(
+                            comparePercent(TotalCustomer, monthPre, monthNow)
+                          )
                         )}{" "}
                         %
                       </h3>
@@ -327,14 +337,19 @@ const Statistics = () => {
                     d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z"
                   />
                 </svg>
-                <span className="text-green-400">(+13%)</span>
+                {/* <span className="text-green-400">(+13%)</span> */}
               </div>
               <div className="right">
                 <h3 className="text-gray-500">This Year</h3>
               </div>
             </div>
             <div className="chart-content">
-              <LineChartStatistics></LineChartStatistics>
+              {TotalExpenses?.length > 0 && TotalSale?.length > 0 && (
+                <LineChartStatistics
+                  sale={TotalSale}
+                  expenses={TotalExpenses}
+                ></LineChartStatistics>
+              )}
             </div>
           </div>
           <div className="visitors-chart">
@@ -361,7 +376,7 @@ const Statistics = () => {
                   />
                 </svg>
 
-                <span className="text-purple font-semibold">(+1.6%)</span>
+                {/* <span className="text-purple font-semibold">(+1.6%)</span> */}
               </div>
             </div>
             <div className="chart-content">
@@ -392,24 +407,24 @@ const Statistics = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>
-                    <img src={iphone14} alt="" />
-                    Iphone 14 Pro - Purple
-                  </td>
-                  <td>14.000.000 VND</td>
-                  <td>100 pcs</td>
-                  <td className="inStock">In Stock</td>
-                </tr>
-                <tr>
-                  <td>
-                    <img src={iphone14} alt="" />
-                    Iphone 14 Pro - Purple
-                  </td>
-                  <td>14.000.000 VND</td>
-                  <td>100 pcs</td>
-                  <td className="outStock">Out of Stock</td>
-                </tr>
+                {TotalProduct?.length > 0 &&
+                  TotalProduct.map((item) => {
+                    return (
+                      <tr>
+                        <td>
+                          <img src={item.images} alt="" />
+                          <span>{item.name}</span>
+                        </td>
+                        <td>{item.price}</td>
+                        <td>{item.sold} pcs</td>
+                        {item.quantity > 0 ? (
+                          <td className="inStock">In Stock</td>
+                        ) : (
+                          <td className="outStock">Out of Stock</td>
+                        )}
+                      </tr>
+                    );
+                  })}
               </tbody>
             </table>
           </div>

@@ -10,12 +10,12 @@ const Header = () => {
         <h3>Feburary 2 2023</h3>
       </div>
       <div className="right-header">
-        <div className="search-header">
+        {/* <div className="search-header">
           <input placeholder="Tìm kiếm theo tên,ID,..." type="text" />
           <div className="search-icon">
             <span className="material-symbols-outlined">search</span>
-          </div>
-        </div>
+          </div> */}
+        {/* </div> */}
         <div className="bell">
           <span className="material-symbols-outlined">notifications</span>
         </div>

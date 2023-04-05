@@ -12,7 +12,7 @@ import {
   Filler,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-
+import { request } from "../utils/request";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -38,19 +38,7 @@ export const options = {
     },
   },
 };
-const labels = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
+
 function createGradient(ctx, area) {
   const gradient = ctx.createLinearGradient(0, 0, 0, area.height);
   gradient.addColorStop(0, "bisque");
@@ -59,20 +47,72 @@ function createGradient(ctx, area) {
 
   return gradient;
 }
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "Dataset 1",
-      data: labels.map(() => faker.datatype.number({ min: 10, max: 110 })),
-    },
-  ],
-};
+
 const LineChartStatistics = (props) => {
+  const labelss = [
+    "",
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const handleData = (sale, expenses) => {
+    const arr = Array(13).fill(0);
+    if (sale?.length > 0 && expenses?.length > 0) {
+      arr.forEach((item, index) => {
+        arr[index] = sale[index] - expenses[index];
+      });
+    }
+    return arr;
+  };
+  const handleLabels = (sale) => {
+    const labels = [
+      "",
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    var arr = [];
+    if (sale?.length > 0) {
+      arr = labels.filter((item, index) => {
+        if (sale[index] !== 0) {
+          return item;
+        }
+      });
+    }
+    arr.unshift("");
+    return arr;
+  };
+
+  const data = {
+    labels: handleLabels(props.sale),
+    datasets: [
+      {
+        label: "Revenue",
+        data: handleData(props.sale, props.expenses),
+      },
+    ],
+  };
+
   const chartRef = useRef(null);
   const [chartData, setChartData] = useState(() => {
     return {
-      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+      labels: [],
       datasets: [],
     };
   });
@@ -81,7 +121,6 @@ const LineChartStatistics = (props) => {
     if (!chart) {
       return;
     }
-
     const chartData = {
       ...data,
       datasets: data.datasets.map((dataset) => ({
@@ -96,7 +135,14 @@ const LineChartStatistics = (props) => {
   }, []);
 
   return (
-    <Line id="myChart" ref={chartRef} options={options} data={chartData}></Line>
+    <div className="">
+      <Line
+        style={{ height: "360px" }}
+        ref={chartRef}
+        options={options}
+        data={chartData}
+      ></Line>
+    </div>
   );
 };
 
