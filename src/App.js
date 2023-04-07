@@ -10,8 +10,8 @@ import Statistics from "./components/pages/Statistic/Statistics";
 import ProductPage from "./components/pages/Product/ProductPage";
 import AddProductPage from "./components/pages/Product/AddProductPage";
 import ProductDetailPage from "./components/pages/Product/ProductDetailPage";
-import { Route, Routes } from "react-router-dom";
-import Login from "./components/pages/User/Login";
+import { Route, Routes, useLocation } from "react-router-dom";
+import Login from "./components/pages/Login/Login";
 
 const App = () => {
   return (
@@ -90,15 +90,16 @@ const App = () => {
               </div>
             }
           ></Route>
-          <Route
-            path="/login"
-            element={
-              <div className="content">
-                <Login></Login>
-              </div>
-            }
-          ></Route>
         </Route>
+
+        <Route
+          path="/admin/login"
+          element={
+            <div className="content">
+              <Login></Login>
+            </div>
+          }
+        ></Route>
       </Routes>
     </Fragment>
   );

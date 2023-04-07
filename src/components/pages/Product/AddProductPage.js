@@ -5,6 +5,7 @@ import { useState } from "react";
 import PreviewImages from "../../tools/PreviewImages";
 import { request } from "../../utils/request";
 import { useNavigate } from "react-router-dom";
+import * as Yup from "yup";
 const AddProductPage = () => {
   const uploadRef = useRef();
   const navigate = useNavigate();
@@ -87,6 +88,26 @@ const AddProductPage = () => {
           });
           setImageUpload("");
         }}
+        validationSchema={Yup.object({
+          name: Yup.string()
+            .required("Required")
+            .min(8, "Minimum 10 characters"),
+          description: Yup.string()
+            .required("Required")
+            .min(10, "Please enter the description of product"),
+          price: Yup.number()
+            .required("Required")
+            .positive("Must be a positive number"),
+          quantity: Yup.number()
+            .required("Required")
+            .positive("Must be a positive number"),
+          sold: Yup.number()
+            .required("Required")
+            .positive("Must be a positive number"),
+          color: Yup.string().required("Required"),
+          brand: Yup.string().required("Required"),
+          category: Yup.string().required("Required"),
+        })}
       >
         {(formik) => {
           return (
