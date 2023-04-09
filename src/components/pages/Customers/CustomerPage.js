@@ -3,11 +3,14 @@ import { request } from "../../utils/request";
 import avatar from "../../../image/avatarDefault.png";
 import "../Customers/mainCustomer.scss";
 import { Link } from "react-router-dom";
+import useDebounce from "../../../hooks/useDebounce";
 const CustomerPage = () => {
   const [data, setData] = useState([]);
+  const [query, setQuery] = useState("");
+  const searchInput = useDebounce(query, 1000);
   const FetchingData = async () => {
     await request
-      .get("/user")
+      .get(`/user/?name[regex]=${searchInput}`)
       .then((res) => {
         setData(res.data);
       })
@@ -27,7 +30,7 @@ const CustomerPage = () => {
   };
   useEffect(() => {
     FetchingData();
-  }, []);
+  }, [searchInput]);
 
   return (
     <div className="customerPages">
@@ -41,7 +44,14 @@ const CustomerPage = () => {
             <span>({data?.length})</span>
           </div>
           <div className="search-tool">
-            <input placeholder="Enter customer name" type="text"></input>
+            <input
+              onChange={(e) => {
+                console.log(e.target.value);
+                setQuery(e.target.value);
+              }}
+              placeholder="Enter customer name"
+              type="text"
+            ></input>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

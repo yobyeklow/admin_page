@@ -1,17 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "../Login/Login.scss";
 import { Form, Formik, useField } from "formik";
 import * as Yup from "yup";
 import { request } from "../../utils/request";
-import { Navigate, redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import Swal from "sweetalert2";
 const Login = () => {
   const [data, setData] = useState(null);
   const [err, setError] = useState(null);
+  const handleChange = () => {
+    setError(null);
+  };
+
   const handleLogin = (values) => {
     request
-      .post("/auth/signin", values)
+      .post("/auth/signin-admin", values)
       .then((res) => {
         setData(res.data);
+        console.log(res.headers.get("x-access-token"));
         localStorage.setItem("accessToken", res.data.accessToken);
       })
       .catch((err) => {
@@ -57,26 +63,14 @@ const Login = () => {
                         id="username"
                         name="username"
                         type="text"
-                      >
-                        {err?.message === "User Not found." && (
-                          <span className="text-red-600 text-sm">
-                            {err.message}
-                          </span>
-                        )}
-                      </MyInput>
+                      ></MyInput>
                     </div>
                     <MyInput
                       label="Password"
                       id="password"
                       name="password"
                       type="password"
-                    >
-                      {err?.message === "Invalid Password!" && (
-                        <span className="text-red-600 text-sm">
-                          {err.message}
-                        </span>
-                      )}
-                    </MyInput>
+                    ></MyInput>
                     <button type="submit" className="btn-login">
                       Log In
                     </button>
@@ -90,9 +84,8 @@ const Login = () => {
     </>
   );
 };
-const MyInput = ({ label, children, ...props }) => {
+const MyInput = ({ label, ...props }) => {
   const [field, meta] = useField(props);
-
   return (
     <div className="flex flex-col gap-2 mb-5 flex-1">
       <label htmlFor={props.id || props.name}>{label}</label>
@@ -104,7 +97,6 @@ const MyInput = ({ label, children, ...props }) => {
       {meta.error && meta.touched ? (
         <div className="text-sm text-red-500">{meta.error}</div>
       ) : null}
-      {!meta && children && <span>{children}</span>}
     </div>
   );
 };

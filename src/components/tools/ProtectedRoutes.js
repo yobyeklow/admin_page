@@ -1,9 +1,9 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { Navigate, Outlet, Route, useLocation } from "react-router-dom";
 
 const ProtectedRoutes = () => {
-  const location = useLocation();
-  return <div></div>;
+  const auth = localStorage.getItem("accessToken");
+  return auth ? <Outlet></Outlet> : <Navigate to="/admin/login"></Navigate>;
 };
 
 export default ProtectedRoutes;
