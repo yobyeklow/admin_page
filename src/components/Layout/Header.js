@@ -1,13 +1,14 @@
 import React from "react";
 import avartar from "../../image/avartar.jpg";
 const Header = () => {
+  const dateNow = new Date().toString().slice(4, 15);
   return (
     <div className="header">
       <div className="left-header">
         <span className="text-3xl material-symbols-outlined">
           calendar_month
         </span>
-        <h3>Feburary 2 2023</h3>
+        <h3>{dateNow}</h3>
       </div>
       <div className="right-header">
         {/* <div className="search-header">

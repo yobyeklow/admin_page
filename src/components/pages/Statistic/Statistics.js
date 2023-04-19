@@ -1,7 +1,6 @@
-import React, { Suspense, lazy, useEffect, useState } from "react";
-// import LineChartStatistics from "../../chart/LineChartStatistics";
+import React, { useEffect, useState } from "react";
 import VerticalBarChart from "../../chart/VerticalBarChart.js";
-import iphone14 from "../../../image/iphone14pro_tim.png";
+
 import { faker } from "@faker-js/faker";
 import { request } from "../../utils/request";
 
@@ -13,8 +12,7 @@ const Statistics = () => {
   const [TotalSale, setTotalSale] = useState();
   const [TotalProduct, setTotalProduct] = useState();
   const monthPre = new Date().getMonth() - 1;
-  const monthNow = new Date().getMonth();
-
+  const monthNow = new Date().getMonth() + 1;
   const FetchingOrdersData = async () => {
     await request
       .get("/order/")
@@ -51,7 +49,9 @@ const Statistics = () => {
     let result = Array(13).fill(0);
     orders.forEach((order) => {
       let month = order.createdAt.slice(6, 7);
-      result[month] += order.paymentIntent.amount;
+      if (order.orderStatus === "Delivered") {
+        result[month] += order.paymentIntent.amount;
+      }
     });
     return result;
   };
@@ -84,7 +84,7 @@ const Statistics = () => {
   useEffect(() => {
     FetchingOrdersData();
   }, []);
-  console.log(TotalProduct);
+
   return (
     <div className="statistics-page">
       <div className="title-page flex items-center gap-4">
@@ -410,7 +410,7 @@ const Statistics = () => {
                 {TotalProduct?.length > 0 &&
                   TotalProduct.map((item) => {
                     return (
-                      <tr>
+                      <tr key={item._id}>
                         <td>
                           <img src={item.images} alt="" />
                           <span>{item.name}</span>

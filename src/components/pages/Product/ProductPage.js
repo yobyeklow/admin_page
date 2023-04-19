@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import useDebounce from "../../../hooks/useDebounce";
-
+import Swal from "sweetalert2";
 import { getProduct } from "../../../store/products/productState";
 import { request } from "../../utils/request";
 const ProductPage = () => {
@@ -10,16 +10,32 @@ const ProductPage = () => {
   const [data, setData] = useState(null);
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
+  const [itemSelect, setItemSelect] = useState(null);
   const searchInput = useDebounce(query, 500);
   const deleteItem = async (id) => {
-    await request
-      .delete(`/products/${id}`)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
+    if (id) {
+      Swal.fire({
+        title: "Do you want to delete this product?",
+        showDenyButton: true,
+
+        confirmButtonText: "Yes",
+        denyButtonText: `No`,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          Swal.fire("Done!", "", "success");
+          await request
+            .delete(`/products/${id}`)
+            .then((res) => {
+              setItemSelect(res.data);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        } else if (result.isDenied) {
+          Swal.fire("Actions are not did", "", "info");
+        }
       });
+    }
   };
   const fetchData = async () => {
     setLoading(true);
@@ -35,7 +51,7 @@ const ProductPage = () => {
 
   useEffect(() => {
     fetchData();
-  }, [searchInput]);
+  }, [searchInput, itemSelect]);
 
   return (
     <div className="productPages">

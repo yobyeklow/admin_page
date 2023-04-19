@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { faker } from "@faker-js/faker";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,7 +11,6 @@ import {
   Filler,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { request } from "../utils/request";
 ChartJS.register(
   CategoryScale,
   LinearScale,

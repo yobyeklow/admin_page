@@ -6,6 +6,7 @@ import PreviewImages from "../../tools/PreviewImages";
 import { request } from "../../utils/request";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+// import Swal from "sweetalert2";
 const AddProductPage = () => {
   const uploadRef = useRef();
   const navigate = useNavigate();
@@ -16,18 +17,32 @@ const AddProductPage = () => {
     };
   }, [imageUpload]);
   const handlePostData = (values) => {
-    request
-      .post("/products/", values, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    console.log(values);
+    // Swal.fire({
+    //   title: "Do you want add it?",
+    //   showDenyButton: true,
+    //   confirmButtonText: "Yes",
+    //   denyButtonText: `No`,
+    // }).then(async (result) => {
+    //   /* Read more about isConfirmed, isDenied below */
+    //   if (result.isConfirmed) {
+    //     Swal.fire("Done!", "", "success");
+    //     await request
+    //       .post("/products/", values, {
+    //         headers: {
+    //           "Content-Type": "multipart/form-data",
+    //         },
+    //       })
+    //       .then((response) => {
+    //         console.log(response.data);
+    //       })
+    //       .catch((err) => {
+    //         console.log(err);
+    //       });
+    //   } else if (result.isDenied) {
+    //     Swal.fire("Actions are not did", "", "info");
+    //   }
+    // });
   };
   return (
     <>
@@ -63,8 +78,8 @@ const AddProductPage = () => {
           },
         }}
         onSubmit={(values, actions) => {
-          handlePostData(values);
-
+          // handlePostData(values);
+          console.log(values);
           actions.resetForm({
             name: "",
             price: "",
@@ -305,14 +320,20 @@ const AddProductPage = () => {
                   </div>
                 </div>
               </div>
-              <div className="w-full flex justify-center">
+              {/* <div className="w-full flex justify-center">
                 <button
                   type="submit"
                   className="mt-10 p-4 bg-blue-500 w-full max-w-[300px] text-white rounded-lg"
                 >
                   Add Product
                 </button>
-              </div>
+              </div> */}
+              <button
+                type="submit"
+                className="mt-10 p-4 bg-blue-500 w-full max-w-[300px] text-white rounded-lg"
+              >
+                Add Product
+              </button>
             </Form>
           );
         }}

@@ -4,21 +4,15 @@ import { Form, Formik, useField } from "formik";
 import * as Yup from "yup";
 import { request } from "../../utils/request";
 import { Navigate } from "react-router-dom";
-import Swal from "sweetalert2";
 const Login = () => {
-  const [data, setData] = useState(null);
   const [err, setError] = useState(null);
-  const handleChange = () => {
-    setError(null);
-  };
 
   const handleLogin = (values) => {
     request
       .post("/auth/signin-admin", values)
       .then((res) => {
-        setData(res.data);
-        console.log(res.headers.get("x-access-token"));
         localStorage.setItem("accessToken", res.data.accessToken);
+        localStorage.setItem("userItem", res.data);
       })
       .catch((err) => {
         setError(err.response.data);

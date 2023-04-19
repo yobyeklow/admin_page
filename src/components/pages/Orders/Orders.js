@@ -5,9 +5,7 @@ import Swal from "sweetalert2";
 import useDebounce from "../../../hooks/useDebounce";
 const Orders = () => {
   const [data, setData] = useState([]);
-  const [query, setQuery] = useState("");
-  const [loading, setLoading] = useState(false);
-  const searchInput = useDebounce(query, 500);
+
   const [statusValue, setStatusValue] = useState("");
   const handleChange = (value) => {
     setStatusValue(value);
@@ -19,7 +17,6 @@ const Orders = () => {
       .then((res) => {
         setData(res.data);
         calculateOrder(res.data);
-        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -129,7 +126,7 @@ const Orders = () => {
                 </th>
                 <th>
                   <div className="header-table">
-                    <span class="material-symbols-outlined text-darkGreen text-xl">
+                    <span className="material-symbols-outlined text-darkGreen text-xl">
                       paid
                     </span>
                     <h3>Total Price</h3>
@@ -137,7 +134,7 @@ const Orders = () => {
                 </th>
                 <th>
                   <div className="header-table">
-                    <span class="material-symbols-outlined text-rosyBrown text-xl">
+                    <span className="material-symbols-outlined text-rosyBrown text-xl">
                       trolley
                     </span>
                     <h3>Status</h3>
@@ -147,7 +144,7 @@ const Orders = () => {
             </thead>
             <tbody className="table-content">
               {data?.length > 0 &&
-                data.map((item) => {
+                data.reverse().map((item) => {
                   return (
                     <MyDataRow
                       key={item._id}
@@ -227,7 +224,7 @@ const MyDataRow = (props) => {
             item.orderStatus === "Dispatched" ||
             item.orderStatus === "Cash on Delivery") && (
             <>
-              <span class="material-symbols-outlined icon-pending">
+              <span className="material-symbols-outlined icon-pending">
                 more_horiz
               </span>
             </>
@@ -235,7 +232,9 @@ const MyDataRow = (props) => {
           {(item.orderStatus === "Cancelled" ||
             item.orderStatus === "Not Processed") && (
             <>
-              <span class="material-symbols-outlined icon-cancel ">close</span>
+              <span className="material-symbols-outlined icon-cancel ">
+                close
+              </span>
             </>
           )}
           {item.orderStatus === "Delivered" && (

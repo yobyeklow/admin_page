@@ -65,7 +65,9 @@ const LineChart = () => {
     orders.forEach((item) => {
       if (item.createdAt.slice(0, 4) === currentYear) {
         const month = item.createdAt.slice(6, 7);
-        result[parseInt(month)] += item.paymentIntent.amount;
+        if (item.orderStatus === "Delivered") {
+          result[parseInt(month)] += item.paymentIntent.amount;
+        }
       }
     });
     return result;

@@ -7,8 +7,7 @@ import { Link } from "react-router-dom";
 const Dashboard = () => {
   const [totalOrder, setTotalOrder] = useState(null);
   const [totalUser, setTotalUser] = useState(null);
-  const adminData = localStorage.getItem("accessToken");
-
+  const dataUser = localStorage.getItem("userItem");
   const config = {
     style: "currency",
     currency: "VND",
@@ -17,9 +16,6 @@ const Dashboard = () => {
   const formatted = new Intl.NumberFormat("it-IT", config);
   const fetchingData = async () => {
     try {
-      const admin = await request.get("/user/admin");
-      console.log(admin);
-
       const responseOrder = await request.get("/order/");
       setTotalOrder(responseOrder.data);
 
@@ -33,7 +29,9 @@ const Dashboard = () => {
   const calculate = () => {
     let sum = 0;
     totalOrder.forEach((item) => {
-      sum += item.paymentIntent.amount;
+      if (item.orderStatus === "Delivered") {
+        sum += item.paymentIntent.amount;
+      }
     });
     return sum;
   };
@@ -92,8 +90,8 @@ const Dashboard = () => {
                     />
                   </svg>
                 </span>
-                <h3>10</h3>
-                <h3>+10.0% this week</h3>
+
+                <h3>+10.0% this year</h3>
               </div>
             </div>
           </div>
@@ -125,8 +123,8 @@ const Dashboard = () => {
                     />
                   </svg>
                 </span>
-                <h3>10</h3>
-                <h3>+10.0% this week</h3>
+
+                <h3>+10.0% this year</h3>
               </div>
             </div>
           </div>
@@ -160,8 +158,8 @@ const Dashboard = () => {
                     />
                   </svg>
                 </span>
-                <h3>10</h3>
-                <h3>+10.0% this week</h3>
+
+                <h3>+10.0% this year</h3>
               </div>
             </div>
           </div>
@@ -215,7 +213,7 @@ const Dashboard = () => {
               </thead>
               <tbody className="table-body">
                 {totalOrder?.length > 0 &&
-                  totalOrder.map((item) => {
+                  totalOrder.reverse().map((item) => {
                     return (
                       <tr key={item._id}>
                         <td>
