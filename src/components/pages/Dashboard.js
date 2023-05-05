@@ -7,7 +7,9 @@ import { Link } from "react-router-dom";
 const Dashboard = () => {
   const [totalOrder, setTotalOrder] = useState(null);
   const [totalUser, setTotalUser] = useState(null);
-  const dataUser = localStorage.getItem("userItem");
+  const [dataUser, setDataUser] = useState(null);
+  const dataUserID = localStorage.getItem("userID");
+
   const config = {
     style: "currency",
     currency: "VND",
@@ -21,6 +23,8 @@ const Dashboard = () => {
 
       const responseCustomer = await request.get("/user/");
       setTotalUser(responseCustomer.data.length);
+      const dataUser = await request.get(`/user/${dataUserID}`);
+      setDataUser(dataUser.data[0]);
     } catch (err) {
       setTotalOrder(null);
       setTotalUser(null);
@@ -43,7 +47,7 @@ const Dashboard = () => {
     <>
       <Fragment>
         <div className="title-content">
-          <h1>Welcome, Đại Huy !</h1>
+          <h1>Welcome, {dataUser?.name} !</h1>
           <span>
             <svg
               xmlns="http://www.w3.org/2000/svg"

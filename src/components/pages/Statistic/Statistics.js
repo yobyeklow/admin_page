@@ -70,11 +70,16 @@ const Statistics = () => {
       let month = parseInt(customer.createdAt.slice(6, 7));
       result[month] += 1;
     });
+    console.log(result);
     return result;
   };
   const comparePercent = (total, monthPre, monthNow) => {
-    if (total[monthPre] === 0) return 100;
-    const percent = (total[monthNow] - total[monthPre]) / total[monthPre];
+    if (total[monthNow] === 0) {
+      return 0;
+    }
+
+    let percent = (total[monthNow] - total[monthPre]) / total[monthPre];
+
     return percent * 100;
   };
   const formatter = new Intl.NumberFormat("it-IT", {
@@ -148,7 +153,8 @@ const Statistics = () => {
                 {TotalSale && (
                   <div className="text-orange-500 font-semibold mr-5">
                     {Math.round(comparePercent(TotalSale, monthPre, monthNow)) >
-                    0 ? (
+                      0 ||
+                    comparePercent(TotalSale, monthPre, monthNow) === 0 ? (
                       <h3>
                         +{" "}
                         {Math.round(
@@ -293,7 +299,7 @@ const Statistics = () => {
                   <div className="text-green-500 font-semibold mr-5">
                     {Math.round(
                       comparePercent(TotalCustomer, monthPre, monthNow)
-                    ) > 0 ? (
+                    ) >= 0 ? (
                       <h3>
                         +{" "}
                         {Math.round(

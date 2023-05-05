@@ -24,7 +24,7 @@ const ProductDetailPage = (props) => {
     await request
       .put(`/products/${state.item._id}`, values)
       .then((res) => {
-        // console.log(res.data);
+        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -36,7 +36,6 @@ const ProductDetailPage = (props) => {
       {state && (
         <Formik
           onSubmit={(values, action) => {
-            console.log(values);
             if (values.sale.isOnSale === false) {
               values.sale.salePercentage = 0;
             }
@@ -57,9 +56,6 @@ const ProductDetailPage = (props) => {
               .required("Required")
               .positive("Must be a positive number"),
             quantity: Yup.number()
-              .required("Required")
-              .positive("Must be a positive number"),
-            sold: Yup.number()
               .required("Required")
               .positive("Must be a positive number"),
             color: Yup.string().required("Required"),
@@ -152,7 +148,12 @@ const ProductDetailPage = (props) => {
                         label="Quantity"
                         id="quantity"
                       ></MyInput>
-                      <MyInput name="sold" label="Sold" id="sold"></MyInput>
+                      <MyInput
+                        name="sold"
+                        label="Sold"
+                        id="sold"
+                        disabled
+                      ></MyInput>
                     </div>
                   </div>
                   <div className="general-info">

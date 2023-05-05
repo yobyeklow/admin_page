@@ -801,7 +801,7 @@
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 .chart-analyst .visitors-chart {
-  max-width: 470px;
+  max-width: 465px;
   width: 100%;
 }
 .chart-analyst .chart-title {
@@ -999,6 +999,7 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 30px;
   padding: 30px 30px;
+  min-height: 100vh;
 }
 .main-product .graph_box .box_item,
 .main-customer .graph_box .box_item {
@@ -1012,9 +1013,17 @@
   position: relative;
   width: 100%;
   height: 200px;
-  background-color: #bfd8fa;
+  background-color: white;
   border-top-right-radius: 15px;
   border-top-left-radius: 15px;
+}
+.main-product .box_item .top-content::after {
+  position: absolute;
+  content: "";
+  background-color: #ccc;
+  height: 1px;
+  width: 100%;
+  bottom: 0;
 }
 .main-product .box_item .top-content > img {
   width: 100%;
@@ -1027,6 +1036,7 @@
   padding: 20px;
   position: relative;
 }
+
 .main-product .box_item .box-content > h2 {
   font-size: 16px;
   color: black;

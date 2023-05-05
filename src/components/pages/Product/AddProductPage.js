@@ -6,6 +6,7 @@ import PreviewImages from "../../tools/PreviewImages";
 import { request } from "../../utils/request";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import Swal from "sweetalert2";
 // import Swal from "sweetalert2";
 const AddProductPage = () => {
   const uploadRef = useRef();
@@ -18,31 +19,29 @@ const AddProductPage = () => {
   }, [imageUpload]);
   const handlePostData = (values) => {
     console.log(values);
-    // Swal.fire({
-    //   title: "Do you want add it?",
-    //   showDenyButton: true,
-    //   confirmButtonText: "Yes",
-    //   denyButtonText: `No`,
-    // }).then(async (result) => {
-    //   /* Read more about isConfirmed, isDenied below */
-    //   if (result.isConfirmed) {
-    //     Swal.fire("Done!", "", "success");
-    //     await request
-    //       .post("/products/", values, {
-    //         headers: {
-    //           "Content-Type": "multipart/form-data",
-    //         },
-    //       })
-    //       .then((response) => {
-    //         console.log(response.data);
-    //       })
-    //       .catch((err) => {
-    //         console.log(err);
-    //       });
-    //   } else if (result.isDenied) {
-    //     Swal.fire("Actions are not did", "", "info");
-    //   }
-    // });
+    Swal.fire({
+      title: "Do you want add it?",
+      showDenyButton: true,
+      confirmButtonText: "Yes",
+      denyButtonText: `No`,
+    }).then(async (result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        Swal.fire("Done!", "", "success");
+        await request
+          .post("/products/", values, {
+            "Content-Type": "multipart/form-data",
+          })
+          .then((response) => {
+            console.log(response.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else if (result.isDenied) {
+        Swal.fire("Actions are not did", "", "info");
+      }
+    });
   };
   return (
     <>
@@ -76,12 +75,14 @@ const AddProductPage = () => {
             isOnSale: false,
             salePercentage: 0,
           },
+          sold: 0,
         }}
         onSubmit={(values, actions) => {
-          // handlePostData(values);
-          console.log(values);
+          handlePostData(values);
+
           actions.resetForm({
             name: "",
+            sold: 0,
             price: "",
             description: "",
             quantity: "",
@@ -116,11 +117,11 @@ const AddProductPage = () => {
           quantity: Yup.number()
             .required("Required")
             .positive("Must be a positive number"),
-          sold: Yup.number()
-            .required("Required")
-            .positive("Must be a positive number"),
+
           color: Yup.string().required("Required"),
+
           brand: Yup.string().required("Required"),
+
           category: Yup.string().required("Required"),
         })}
       >
@@ -320,20 +321,14 @@ const AddProductPage = () => {
                   </div>
                 </div>
               </div>
-              {/* <div className="w-full flex justify-center">
+              <div className="w-full flex justify-center">
                 <button
                   type="submit"
                   className="mt-10 p-4 bg-blue-500 w-full max-w-[300px] text-white rounded-lg"
                 >
                   Add Product
                 </button>
-              </div> */}
-              <button
-                type="submit"
-                className="mt-10 p-4 bg-blue-500 w-full max-w-[300px] text-white rounded-lg"
-              >
-                Add Product
-              </button>
+              </div>
             </Form>
           );
         }}

@@ -1,7 +1,18 @@
-import React from "react";
-import avartar from "../../image/avartar.jpg";
+import React, { useEffect, useState } from "react";
+import avatarDefault from "../../image/avatarDefault.png";
+import { request } from "../utils/request";
 const Header = () => {
   const dateNow = new Date().toString().slice(4, 15);
+  const [dataUser, setDataUser] = useState(null);
+  const userID = localStorage.getItem("userID");
+  const handleData = async () => {
+    const dataUserID = await request.get(`/user/${userID}`);
+    setDataUser(dataUserID.data[0]);
+  };
+  useEffect(() => {
+    handleData();
+  }, []);
+
   return (
     <div className="header">
       <div className="left-header">
@@ -21,7 +32,7 @@ const Header = () => {
           <span className="material-symbols-outlined">notifications</span>
         </div>
         <div className="avartar-header">
-          <img src={avartar} alt="" />
+          <img src={`${dataUser?.avatar}` || avatarDefault} alt="" />
         </div>
       </div>
     </div>

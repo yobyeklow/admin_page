@@ -58,16 +58,9 @@ const CustomerDetailsPage = () => {
                     type="text"
                     value={state.item.username}
                   ></MyInput>
-                  <MyInput
-                    name="password"
-                    id="password"
-                    label="Password"
-                    type="password"
-                    value={state.item.password}
-                  ></MyInput>
                 </div>
               </div>
-              <div className="bottom">
+              <div className="bottom mb-8">
                 <MyTextArea
                   name="address"
                   id="address"

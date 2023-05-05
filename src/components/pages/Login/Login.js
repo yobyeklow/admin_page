@@ -4,24 +4,31 @@ import { Form, Formik, useField } from "formik";
 import * as Yup from "yup";
 import { request } from "../../utils/request";
 import { Navigate } from "react-router-dom";
+import Swal from "sweetalert2";
 const Login = () => {
   const [err, setError] = useState(null);
-
+  const token = localStorage.getItem("accessToken");
   const handleLogin = (values) => {
     request
       .post("/auth/signin-admin", values)
       .then((res) => {
+        <Navigate to="/"></Navigate>;
         localStorage.setItem("accessToken", res.data.accessToken);
-        localStorage.setItem("userItem", res.data);
+        localStorage.setItem("userID", res.data.user._id);
       })
       .catch((err) => {
-        setError(err.response.data);
+        Swal.fire({
+          title: err.response.data.message,
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Ok!",
+        });
       });
   };
-
+  useEffect(() => {}, []);
   return (
     <>
-      {localStorage.getItem("accessToken") !== null ? (
+      {localStorage.getItem("accessToken") ? (
         <Navigate to="/"></Navigate>
       ) : (
         <div className="login-page">
@@ -32,10 +39,12 @@ const Login = () => {
                 username: "",
                 password: "",
               }}
-              onSubmit={(values, { resetForm }) => {
-                resetForm({
-                  username: "",
-                  password: "",
+              onSubmit={(values, actions) => {
+                actions.resetForm({
+                  values: {
+                    username: "",
+                    password: "",
+                  },
                 });
                 handleLogin(values);
               }}
@@ -57,6 +66,7 @@ const Login = () => {
                         id="username"
                         name="username"
                         type="text"
+                        error={err}
                       ></MyInput>
                     </div>
                     <MyInput
@@ -78,11 +88,13 @@ const Login = () => {
     </>
   );
 };
-const MyInput = ({ label, ...props }) => {
+const MyInput = ({ label, error, ...props }) => {
   const [field, meta] = useField(props);
+
   return (
     <div className="flex flex-col gap-2 mb-5 flex-1">
       <label htmlFor={props.id || props.name}>{label}</label>
+      {error === "Require Admin Role!" && {}}
       <input
         className="border border-gray-300 rounded-lg w-full max-w-[600px] p-4"
         {...props}
