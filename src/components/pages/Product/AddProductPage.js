@@ -29,9 +29,7 @@ const AddProductPage = () => {
       if (result.isConfirmed) {
         Swal.fire("Done!", "", "success");
         await request
-          .post("/products/", values, {
-            "Content-Type": "multipart/form-data",
-          })
+          .post("/products/", values)
           .then((response) => {
             console.log(response.data);
           })
@@ -224,7 +222,7 @@ const AddProductPage = () => {
                 <div className="optionContent-product">
                   <MySelect
                     onChange={(value) => formik.setFieldValue("brand", value)}
-                    value={formik.values.series}
+                    value={formik.values.brand}
                     name="brand"
                     label="Product Brand"
                     id="brand"
@@ -233,12 +231,13 @@ const AddProductPage = () => {
                     <option value="America">America</option>
                     <option value="China">China</option>
                     <option value="HongKong">HongKong</option>
+                    <option value="Korea">Korea</option>
                   </MySelect>
                   <MySelect
                     onChange={(value) =>
                       formik.setFieldValue("category", value)
                     }
-                    value={formik.values.series}
+                    value={formik.values.category}
                     name="category"
                     label="Category"
                     id="category"
@@ -249,7 +248,7 @@ const AddProductPage = () => {
                   </MySelect>
                   <MySelect
                     onChange={(value) => formik.setFieldValue("color", value)}
-                    value={formik.values.series}
+                    value={formik.values.color}
                     name="color"
                     label="Color"
                     id="color"
@@ -262,24 +261,16 @@ const AddProductPage = () => {
                     <option value="Black">Black</option>
                     <option value="Blue">Blue</option>
                     <option value="Green">Green</option>
+                    <option value="White">White</option>
                   </MySelect>
-                  <MySelect
-                    onChange={(value) => formik.setFieldValue("series", value)}
-                    value={formik.values.series}
+                  <MyInput
                     name="series"
                     label="Product Series"
-                    id="series"
-                  >
-                    <option value="">Select series...</option>
-                    <option value="14 series">14 series</option>
-                    <option value="13 series">13 series</option>
-                    <option value="12 series">12 series</option>
-                    <option value="Galaxy Z series">Galaxy Z series</option>
-                    <option value="Galaxy S series">Galaxy S series</option>
-                  </MySelect>
+                    placeholder="Enter series of product..."
+                  ></MyInput>
                   <MySelect
                     onChange={(value) => formik.setFieldValue("ram", value)}
-                    value={formik.values.series}
+                    value={formik.values.ram}
                     name="ram"
                     label="Ram"
                     id="ram"

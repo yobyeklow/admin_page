@@ -174,6 +174,7 @@ const ProductDetailPage = (props) => {
                         <option value="American">America</option>
                         <option value="China">China</option>
                         <option value="HongKong">HongKong</option>
+                        <option value="Korea">Korea</option>
                       </MySelect>
 
                       <MySelect
@@ -188,22 +189,11 @@ const ProductDetailPage = (props) => {
                         <option value="mobile">Mobile</option>
                         <option value="accessories">Accessories</option>
                       </MySelect>
-                      <MySelect
-                        onChange={(value) =>
-                          formik.setFieldValue("series", value)
-                        }
+                      <MyInput
                         name="series"
-                        label="Product Series"
-                        id="series"
-                      >
-                        <option value="">None</option>
-
-                        <option value="14 series">14 series</option>
-                        <option value="13 series">13 series</option>
-                        <option value="12 series">12 series</option>
-                        <option value="Galaxy Z series">Galaxy Z series</option>
-                        <option value="Galaxy S series">Galaxy S series</option>
-                      </MySelect>
+                        label="Series"
+                        placeholder="Enter series of product..."
+                      ></MyInput>
                     </div>
                     <div className="flex items-center justify-between  gap-10">
                       <MySelect

@@ -3,16 +3,18 @@ import "../Login/Login.scss";
 import { Form, Formik, useField } from "formik";
 import * as Yup from "yup";
 import { request } from "../../utils/request";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 const Login = () => {
   const [err, setError] = useState(null);
   const token = localStorage.getItem("accessToken");
+  const navigate = useNavigate();
   const handleLogin = (values) => {
     request
       .post("/auth/signin-admin", values)
       .then((res) => {
-        <Navigate to="/"></Navigate>;
+        navigate("/");
+
         localStorage.setItem("accessToken", res.data.accessToken);
         localStorage.setItem("userID", res.data.user._id);
       })
@@ -29,7 +31,7 @@ const Login = () => {
   return (
     <>
       {localStorage.getItem("accessToken") ? (
-        <Navigate to="/"></Navigate>
+        navigate("/")
       ) : (
         <div className="login-page">
           <div className="login-box">
