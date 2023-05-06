@@ -6,6 +6,7 @@ import ImageInput from "../Product/ImageInput";
 import { useLocation, useNavigate } from "react-router-dom";
 import { request } from "../../utils/request";
 import * as Yup from "yup";
+import Swal from "sweetalert2";
 const ProductDetailPage = (props) => {
   const [width, setWidth] = useState(0);
   const span = useRef();
@@ -22,29 +23,43 @@ const ProductDetailPage = (props) => {
   const attr = state.item.sale.isOnSale;
   const [saleStatus, setSaleStatus] = useState(attr);
   const handleUpdateData = async (values) => {
-    console.log(values);
-    await request
-      .put(
-        `/products/${state.item._id}`,
-        {
-          ...values,
-          sale: {
-            isOnSale: values.sale.isOnSale,
-            salePercentage: values.sale.salePercentage,
-          },
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    Swal.fire({
+      title: "Do you save this changes?",
+      // text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Save!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire("Saved!", "Your changes has been saved.", "success");
+        request
+          .put(
+            `/products/${state.item._id}`,
+            {
+              ...values,
+              // "sale.isOnSale": values.sale.isOnSale,
+              // "sale.salePercentage": values.sale.salePercentage,
+              sale: {
+                isOnSale: values.sale.isOnSale,
+                salePercentage: values.sale.salePercentage,
+              },
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          )
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    });
   };
 
   return (
