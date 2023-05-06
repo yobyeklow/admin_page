@@ -19,10 +19,26 @@ const ProductDetailPage = (props) => {
   const changeHandler = (evt) => {
     setContent(evt.target.value);
   };
-  const [saleStatus, setSaleStatus] = useState(`${state.item.sale.isOnSale}`);
+  const attr = state.item.sale.isOnSale;
+  const [saleStatus, setSaleStatus] = useState(attr);
   const handleUpdateData = async (values) => {
+    console.log(values);
     await request
-      .put(`/products/${state.item._id}`, values)
+      .put(
+        `/products/${state.item._id}`,
+        {
+          ...values,
+          sale: {
+            isOnSale: values.sale.isOnSale,
+            salePercentage: values.sale.salePercentage,
+          },
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
       .then((res) => {
         console.log(res.data);
       })
@@ -40,6 +56,7 @@ const ProductDetailPage = (props) => {
               values.sale.salePercentage = 0;
             }
             // values.name = content;
+            // console.log(values);
             handleUpdateData(values);
           }}
           initialValues={{
@@ -104,11 +121,16 @@ const ProductDetailPage = (props) => {
               )}
               <div className="middle-content">
                 <div className="left-content">
-                  <div className="image-info">
-                    <ImageInput
+                  <div className="image-info flex justify-center">
+                    <img
+                      className="w-[200px] h-[250px] pb-5 object-cover overflow-hidden shadow-lg rounded-lg"
+                      src={`${state.item.images}`}
+                      alt=""
+                    />
+                    {/* <ImageInput
                       formik={formik}
                       imagesProps={state.item.images}
-                    ></ImageInput>
+                    ></ImageInput> */}
                   </div>
                   <div className="general-info">
                     <h1 className="text-2xl font-bold text-gray-600 mb-5">
@@ -171,10 +193,10 @@ const ProductDetailPage = (props) => {
                         id="brand"
                       >
                         <option value="">Select brand options...</option>
-                        <option value="American">America</option>
-                        <option value="China">China</option>
-                        <option value="HongKong">HongKong</option>
-                        <option value="Korea">Korea</option>
+                        <option value="american">America</option>
+                        <option value="china">China</option>
+                        <option value="hongKong">HongKong</option>
+                        <option value="korea">Korea</option>
                       </MySelect>
 
                       <MySelect

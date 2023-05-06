@@ -228,10 +228,10 @@ const AddProductPage = () => {
                     id="brand"
                   >
                     <option value="">Select brand options...</option>
-                    <option value="America">America</option>
-                    <option value="China">China</option>
-                    <option value="HongKong">HongKong</option>
-                    <option value="Korea">Korea</option>
+                    <option value="america">America</option>
+                    <option value="china">China</option>
+                    <option value="hongKong">HongKong</option>
+                    <option value="korea">Korea</option>
                   </MySelect>
                   <MySelect
                     onChange={(value) =>
@@ -243,8 +243,8 @@ const AddProductPage = () => {
                     id="category"
                   >
                     <option value="">Select category options...</option>
-                    <option value="Mobile">Mobile</option>
-                    <option value="Accessories">Accessories</option>
+                    <option value="mobile">Mobile</option>
+                    <option value="accessories">Accessories</option>
                   </MySelect>
                   <MySelect
                     onChange={(value) => formik.setFieldValue("color", value)}
@@ -254,14 +254,14 @@ const AddProductPage = () => {
                     id="color"
                   >
                     <option value="">Select color options...</option>
-                    <option value="Silver">Sliver</option>
-                    <option value="Gold">Gold</option>
-                    <option value="Red">Red</option>
-                    <option value="Purple">Purple</option>
-                    <option value="Black">Black</option>
-                    <option value="Blue">Blue</option>
-                    <option value="Green">Green</option>
-                    <option value="White">White</option>
+                    <option value="silver">Sliver</option>
+                    <option value="gold">Gold</option>
+                    <option value="red">Red</option>
+                    <option value="purple">Purple</option>
+                    <option value="black">Black</option>
+                    <option value="blue">Blue</option>
+                    <option value="green">Green</option>
+                    <option value="white">White</option>
                   </MySelect>
                   <MyInput
                     name="series"

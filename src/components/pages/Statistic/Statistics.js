@@ -45,7 +45,7 @@ const Statistics = () => {
         console.log(err);
       });
   };
-  // console.log(TotalExpenses);
+  console.log(TotalExpenses);
   const processTotalSale = (orders) => {
     let result = Array(13).fill(0);
     orders.forEach((order) => {
