@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { request } from "../../utils/request";
 import Swal from "sweetalert2";
-import useDebounce from "../../../hooks/useDebounce";
+
 const Orders = () => {
   const [data, setData] = useState([]);
-
+  const monthPre = new Date().getMonth();
+  const monthNow = new Date().getMonth() + 1;
   const [statusValue, setStatusValue] = useState("");
   const handleChange = (value) => {
     setStatusValue(value);
@@ -16,7 +17,8 @@ const Orders = () => {
       .get("/order")
       .then((res) => {
         setData(res.data);
-        calculateOrder(res.data);
+        calculateOrdersNow(res.data);
+        calculatePreOrders(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -27,21 +29,83 @@ const Orders = () => {
     deliveredOrder: 0,
     cancelledOrder: 0,
   });
-  const calculateOrder = (orders) => {
-    const newOrder = orders.filter(
-      (item) => item.orderStatus === "Processing"
-    ).length;
-    const deliveredOrder = orders.filter(
-      (item) => item.orderStatus === "Delivered"
-    ).length;
-    const cancelledOrder = orders.filter(
-      (item) => item.orderStatus === "Cancelled"
-    ).length;
+  const [totalPreOrders, setTotalPreOrders] = useState({
+    newOrder: 0,
+    deliveredOrder: 0,
+    cancelledOrder: 0,
+  });
+  const calculateOrdersNow = (orders) => {
+    const newOrder = orders.filter((item) => {
+      if (
+        item.orderStatus === "Processing" &&
+        parseInt(item.createdAt.slice(6, 7)) === monthNow
+      ) {
+        return item;
+      }
+    }).length;
+    const deliveredOrder = orders.filter((item) => {
+      if (
+        item.orderStatus === "Delivered" &&
+        parseInt(item.createdAt.slice(6, 7)) === monthNow
+      ) {
+        return item;
+      }
+    }).length;
+    const cancelledOrder = orders.filter((item) => {
+      if (
+        item.orderStatus === "Cancelled" &&
+        parseInt(item.createdAt.slice(6, 7)) === monthNow
+      ) {
+        return item;
+      }
+    }).length;
     setTotalOrders({
       newOrder,
       deliveredOrder,
       cancelledOrder,
     });
+  };
+  const calculatePreOrders = (orders) => {
+    const newOrder = orders.filter((item) => {
+      if (
+        item.orderStatus === "Processing" &&
+        parseInt(item.createdAt.slice(6, 7)) === monthPre
+      ) {
+        return item;
+      }
+    }).length;
+    const deliveredOrder = orders.filter((item) => {
+      if (
+        item.orderStatus === "Delivered" &&
+        parseInt(item.createdAt.slice(6, 7)) === monthPre
+      ) {
+        return item;
+      }
+    }).length;
+    const cancelledOrder = orders.filter((item) => {
+      if (
+        item.orderStatus === "Cancelled" &&
+        parseInt(item.createdAt.slice(6, 7)) === monthPre
+      ) {
+        return item;
+      }
+    }).length;
+    setTotalPreOrders({
+      newOrder,
+      deliveredOrder,
+      cancelledOrder,
+    });
+  };
+
+  const comparePercent = (ordersNow, ordersPre) => {
+    if (ordersPre === 0 && ordersNow === 0) {
+      return 0;
+    }
+    if (ordersPre === 0 && ordersNow !== 0) {
+      return 100;
+    }
+    const percent = ((ordersNow - ordersPre) / ordersPre) * 100;
+    return percent;
   };
 
   useEffect(() => {
@@ -56,13 +120,29 @@ const Orders = () => {
           <div className="info-box-content new-orders">
             <h3 className="top-content">New Orders</h3>
             <div className="bottom-content">
-              <h1>{totalOrders.newOrder}</h1>
+              <h1>{totalOrders?.newOrder}</h1>
               <div className="text-details">
                 <span>Impression</span>
                 <span>-</span>
-                <span>20%</span>
+                <span>
+                  {data &&
+                    comparePercent(
+                      totalOrders.newOrder,
+                      totalPreOrders.newOrder
+                    )}{" "}
+                  %
+                </span>
               </div>
-              <span class="material-symbols-outlined icon-up">trending_up</span>
+              {comparePercent(totalOrders.newOrder, totalPreOrders.newOrder) >
+              0 ? (
+                <span class="material-symbols-outlined icon-up">
+                  trending_up
+                </span>
+              ) : (
+                <span class="material-symbols-outlined icon-down">
+                  trending_down
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -70,13 +150,31 @@ const Orders = () => {
           <div className="info-box-content pending-orders">
             <h3 className="top-content">Delivered Orders</h3>
             <div className="bottom-content">
-              <h1>{totalOrders.deliveredOrder}</h1>
+              <h1>{totalOrders?.deliveredOrder}</h1>
               <div className="text-details">
                 <span>Impression</span>
                 <span>-</span>
-                <span>20%</span>
+                <span>
+                  {data &&
+                    comparePercent(
+                      totalOrders.deliveredOrder,
+                      totalPreOrders.deliveredOrder
+                    )}{" "}
+                  %
+                </span>
               </div>
-              <span class="material-symbols-outlined icon-up">trending_up</span>
+              {comparePercent(
+                totalOrders.deliveredOrder,
+                totalPreOrders.deliveredOrder
+              ) > 0 ? (
+                <span class="material-symbols-outlined icon-up">
+                  trending_up
+                </span>
+              ) : (
+                <span class="material-symbols-outlined icon-down">
+                  trending_down
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -84,13 +182,31 @@ const Orders = () => {
           <div className="info-box-content delivered-orders">
             <h3 className="top-content">Cancelled Orders</h3>
             <div className="bottom-content">
-              <h1>{totalOrders.cancelledOrder}</h1>
+              <h1>{totalOrders?.cancelledOrder}</h1>
               <div className="text-details">
                 <span>Impression</span>
                 <span>-</span>
-                <span>20%</span>
+                <span>
+                  {data &&
+                    comparePercent(
+                      totalOrders.cancelledOrder,
+                      totalPreOrders.cancelledOrder
+                    )}{" "}
+                  %
+                </span>
               </div>
-              <span class="material-symbols-outlined icon-up">trending_up</span>
+              {comparePercent(
+                totalOrders.cancelledOrder,
+                totalPreOrders.cancelledOrder
+              ) > 0 ? (
+                <span class="material-symbols-outlined icon-up">
+                  trending_up
+                </span>
+              ) : (
+                <span class="material-symbols-outlined icon-down">
+                  trending_down
+                </span>
+              )}
             </div>
           </div>
         </div>

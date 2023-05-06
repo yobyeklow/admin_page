@@ -21,30 +21,7 @@ ChartJS.register(
   Legend
 );
 
-export const options = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      display: false,
-    },
-    afterDraw: function (chart) {
-      console.log(chart);
-      if (chart.data.datasets[0].data.length < 1) {
-        let ctx = chart.ctx;
-        let width = chart.width;
-        let height = chart.height;
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.font = "30px Arial";
-        ctx.fillText("No data to display", width / 2, height / 2);
-        ctx.restore();
-      }
-    },
-  },
-};
-
-const LineChart = () => {
+const LineChartTest = () => {
   const [dataOrder, setDataOrder] = useState([]);
   const [monthOrder, setMonthOrder] = useState([]);
   const fetchingData = async () => {
@@ -71,7 +48,6 @@ const LineChart = () => {
         console.log(err);
       });
   };
-
   const processData = (orders) => {
     const currentYear = new Date().getFullYear().toString();
     const result = new Array(13).fill(0);
@@ -102,7 +78,7 @@ const LineChart = () => {
       "November",
       "December",
     ];
-
+    console.log(month);
     let lastLabel = label.filter((element, index) => {
       if (month[index] !== 0) {
         return element;
@@ -132,8 +108,7 @@ const LineChart = () => {
   useEffect(() => {
     fetchingData();
   }, []);
-
-  return <Line options={options} data={data}></Line>;
+  return <Line data={data}></Line>;
 };
 
-export default LineChart;
+export default LineChartTest;

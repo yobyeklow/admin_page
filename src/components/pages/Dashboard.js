@@ -4,6 +4,7 @@ import LineChart from "../chart/LineChart";
 import { request } from "../utils/request";
 import avatar from "../../image/avatarDefault.png";
 import { Link } from "react-router-dom";
+import LineChartTest from "../chart/LineChartTest";
 const Dashboard = () => {
   const [totalOrder, setTotalOrder] = useState(null);
   const [totalUser, setTotalUser] = useState(null);
@@ -13,7 +14,7 @@ const Dashboard = () => {
   const config = {
     style: "currency",
     currency: "VND",
-    maximumFractionDigits: 9,
+    // maximumFractionDigits: 9,
   };
   const formatted = new Intl.NumberFormat("it-IT", config);
   const fetchingData = async () => {
@@ -103,7 +104,7 @@ const Dashboard = () => {
             <div className="sales-content">
               <div className="top-sales">
                 <div className="left-components">
-                  <h3>Today Customers</h3>
+                  <h3>Total Customers</h3>
                   <h1>{totalUser}</h1>
                 </div>
                 <div className="right-components">
@@ -136,7 +137,7 @@ const Dashboard = () => {
             <div className="sales-content">
               <div className="top-sales">
                 <div className="left-components">
-                  <h3>Today Orders</h3>
+                  <h3>Total Orders</h3>
                   <h1>{totalOrder?.length}</h1>
                 </div>
                 <div className="right-components">

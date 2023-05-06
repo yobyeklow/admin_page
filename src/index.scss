@@ -431,6 +431,13 @@
   font-size: 18px;
   color: #4570ab;
 }
+.bottom-content .icon-down {
+  background-color: white;
+  border-radius: 100%;
+  padding: 4px;
+  font-size: 18px;
+  color: rgb(226, 12, 12);
+}
 .data-order {
   margin-top: 40px;
   width: 100%;
@@ -593,12 +600,12 @@
   width: 100%;
   min-height: 250px;
   padding: 20px;
-  background: #d7e2ed;
+  // background: #d7e2ed;
   border-radius: 15px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 .boxItem .top-content > img {
-  width: 250px;
+  width: 200px;
   height: 250px;
   overflow: hidden;
   margin: 0 auto;

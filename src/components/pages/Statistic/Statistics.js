@@ -11,7 +11,7 @@ const Statistics = () => {
   const [TotalExpenses, setTotalExpenses] = useState();
   const [TotalSale, setTotalSale] = useState();
   const [TotalProduct, setTotalProduct] = useState();
-  const monthPre = new Date().getMonth() - 1;
+  const monthPre = new Date().getMonth();
   const monthNow = new Date().getMonth() + 1;
   const FetchingOrdersData = async () => {
     await request
@@ -19,9 +19,6 @@ const Statistics = () => {
       .then((res) => {
         const sale = processTotalSale(res.data);
         setTotalSale(sale);
-        const expenses = processTotalExpenses(sale);
-        setTotalExpenses(expenses);
-        return expenses;
       })
 
       .catch((err) => {
@@ -40,11 +37,15 @@ const Statistics = () => {
       .get("/products")
       .then((res) => {
         setTotalProduct(res.data);
+        // processTotalExpenses(res.data);
+        const expenses = processTotalExpenses(res.data);
+        setTotalExpenses(expenses);
       })
       .catch((err) => {
         console.log(err);
       });
   };
+  // console.log(TotalExpenses);
   const processTotalSale = (orders) => {
     let result = Array(13).fill(0);
     orders.forEach((order) => {
@@ -55,14 +56,13 @@ const Statistics = () => {
     });
     return result;
   };
-  const processTotalExpenses = (orders) => {
-    let result = Array(13).fill(0);
-    orders.forEach((order, index) => {
-      if (order !== 0) {
-        result[index] += parseInt(faker.finance.amount(50000000, 300000000, 0));
-      }
+  const processTotalExpenses = (products) => {
+    let results = Array(13).fill(0);
+    products.forEach((item) => {
+      let month = item.createdAt.slice(6, 7);
+      results[month] += item.quantity * item.price;
     });
-    return result;
+    return results;
   };
   const processTotalCustomer = (customers) => {
     let result = Array(13).fill(0);
@@ -70,16 +70,16 @@ const Statistics = () => {
       let month = parseInt(customer.createdAt.slice(6, 7));
       result[month] += 1;
     });
-    console.log(result);
+
     return result;
   };
+
   const comparePercent = (total, monthPre, monthNow) => {
     if (total[monthNow] === 0) {
       return 0;
     }
 
     let percent = (total[monthNow] - total[monthPre]) / total[monthPre];
-
     return percent * 100;
   };
   const formatter = new Intl.NumberFormat("it-IT", {
@@ -207,7 +207,7 @@ const Statistics = () => {
             <div className="flex-1">
               <div className="flex justify-between">
                 <div>
-                  {TotalSale && (
+                  {TotalExpenses && (
                     <>
                       <h3 className="text-xl font-semibold mb-2 w-[217px]">
                         {formatter.format(TotalExpenses[monthNow])}

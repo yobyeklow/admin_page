@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import avatarDefault from "../../image/avatarDefault.png";
 import { request } from "../utils/request";
+import { data } from "../chart/DoughnutChart";
 const Header = () => {
   const dateNow = new Date().toString().slice(4, 15);
-  const [dataUser, setDataUser] = useState(null);
+  const [userImg, setUserImg] = useState(null);
   const userID = localStorage.getItem("userID");
   const handleData = async () => {
     const dataUserID = await request.get(`/user/${userID}`);
-    setDataUser(dataUserID.data[0]);
+    setUserImg(dataUserID.data[0].avatar);
   };
+
   useEffect(() => {
     handleData();
   }, []);
@@ -32,7 +34,7 @@ const Header = () => {
           <span className="material-symbols-outlined">notifications</span>
         </div>
         <div className="avartar-header">
-          <img src={`${dataUser?.avatar}` || avatarDefault} alt="" />
+          <img src={userImg === null ? avatarDefault : userImg} alt="" />
         </div>
       </div>
     </div>

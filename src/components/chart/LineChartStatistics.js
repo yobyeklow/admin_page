@@ -96,13 +96,17 @@ const LineChartStatistics = (props) => {
     arr.unshift("");
     return arr;
   };
-
+  const normalize = (dataOrder) => {
+    const result = dataOrder.filter((item) => item !== 0);
+    result.unshift(0);
+    return result;
+  };
   const data = {
     labels: handleLabels(props.sale),
     datasets: [
       {
         label: "Revenue",
-        data: handleData(props.sale, props.expenses),
+        data: normalize(handleData(props.sale, props.expenses)),
       },
     ],
   };
