@@ -48,7 +48,7 @@ const ProductDetailPage = (props) => {
             },
             {
               headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "multipart/form-data",
               },
             }
           )
@@ -136,16 +136,16 @@ const ProductDetailPage = (props) => {
               )}
               <div className="middle-content">
                 <div className="left-content">
-                  <div className="image-info flex justify-center">
-                    <img
+                  <div className="image-info">
+                    {/* <img
                       className="w-[200px] h-[250px] pb-5 object-cover overflow-hidden shadow-lg rounded-lg"
                       src={`${state.item.images}`}
                       alt=""
-                    />
-                    {/* <ImageInput
+                    /> */}
+                    <ImageInput
                       formik={formik}
                       imagesProps={state.item.images}
-                    ></ImageInput> */}
+                    ></ImageInput>
                   </div>
                   <div className="general-info">
                     <h1 className="text-2xl font-bold text-gray-600 mb-5">
